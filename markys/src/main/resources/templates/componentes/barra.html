@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="barra-navegacion">
+  <nav>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/carta}" class="active">Carta</a>
+    <a th:href="@{/delivery}">Delivery</a>
+    <a th:href="@{/contacto}">Contactos</a>
+    <a th:href="@{/carrito}">Carrito</a>
+
+    <!-- Mostrar links según estado de autenticación -->
+    <a th:if="${#authentication != null and #authentication.principal != null}" th:href="@{/logout}">Cerrar Sesión</a>
+    <a th:if="${#authentication == null or #authentication.principal == null}" th:href="@{/login}">Iniciar Sesión</a>
+
+  </nav>
+</div>
+</body>
+</html>

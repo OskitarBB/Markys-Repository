@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuestros Platillos y Promos</title>
+  <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="d-flex align-items-center justify-content-between p-3">
+  <a th:href="@{/}">
+    <img class="logoprin" th:src="@{img/logo_markys.png}" alt="Logo" style="width: 300px; height: 190px;">
+  </a>
+  <h1 class="bienvenida mb-0 text-end">Bienvenidos a la Pollería Marky's</h1>
+</header>
+
+<!-- Barra de navegación -->
+<div th:replace="componentes/barra :: barra-navegacion"></div>
+
+<!-- Sección principal de la carta -->
+<section class="carta-container">
+  <h2>¡Nuestros Platillos!</h2>
+  <p>Disfruta de los mejores platillos de Marky's Pollos a la Brasa.</p>
+
+  <!-- Aquí agregamos los platillos -->
+  <div class="platillo-container">
+    <!-- Loop de Thymeleaf para renderizar los platillos -->
+    <div th:each="platillo : ${platillos}" class="platillo-card">
+      <!-- Imágenes de los platillos -->
+      <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Platillo" class="platillo-imagen">
+      <h3 th:text="${platillo.nombre}"></h3>
+      <p th:text="${platillo.descripcion}"></p>
+      <p th:text="'Precio: S/ ' + ${platillo.precio}"></p>
+      <p th:text="'Estado: ' + ${platillo.estado}"></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <img src="img/logo_markys.png" alt="Logo Marky's" class="footer-logo" style="width:160px; height:180px">
+      <p><strong>Marky’s</strong><br>Trayendo alegría, felicidad<br>y sazón para todos</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>LEGAL</h4>
+      <p>Términos y condiciones</p>
+      <p>Políticas de privacidad</p>
+      <p>Razones Sociales y Ruc</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Nuestras redes y contactos</h4>
+      <p>
+        <img src="img/whatsapp_logo.png" alt="WhatsApp" class="icono"> 942970786
+      </p>
+      <p>
+        <img src="img/facebook_logo.png" alt="Facebook" class="icono"> Marky’s
+      </p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Formas de pago</h4>
+      <div class="metodos-pago">
+        <img src="img/yape_logo.png" alt="Yape">
+        <img src="img/visa_logo.png" alt="Visa">
+        <img src="img/mastercard_logo.png" alt="Mastercard">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-copy">
+    <p>&copy; 2025 Pollería Marky’s. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+</body>
+</html>
