@@ -68,13 +68,4 @@ public class Platillo {
     public void setImagen(String imagen) {
         this.imagen = imagen;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
 }

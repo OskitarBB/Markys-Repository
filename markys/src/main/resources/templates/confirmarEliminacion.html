@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Eliminación</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/img/pollo_fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 50%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #b30000;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .eliminar-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eliminar-btn {
+            background-color: red;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .eliminar-btn:hover {
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .gif-alerta {
+            width: 100px;
+        }
+
+        .cancelar-btn {
+            margin-top: 25px;
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>¿Estás seguro de eliminar al usuario con el username: <span th:text="${usuario.username}">Usuario</span>?</h1>
+
+    <form action="#" th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id})}" method="post">
+        <div class="eliminar-container">
+            <img class="gif-alerta" src="https://i.gifer.com/origin/59/592bc2a8ca4f304b7392b967cc5122eb_w200.gif" alt="Alerta">
+            <button type="submit" class="eliminar-btn">Sí, eliminar</button>
+        </div>
+        <a href="/admin/usuarios" class="cancelar-btn">Cancelar</a>
+    </form>
+</div>
+
+</body>
+</html>

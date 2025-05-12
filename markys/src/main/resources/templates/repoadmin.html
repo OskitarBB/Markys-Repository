@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/img/pollo_fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: red;
+            color: yellow;
+            padding: 20px;
+            min-height: 100vh;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .bienvenida {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .bienvenida p {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .bienvenida .username {
+            font-size: 28px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .imagen-admin-container {
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .imagen-admin {
+            display: block;
+            margin: 0 auto;
+            width: 120px;
+            height: auto;
+        }
+
+        .opciones li {
+            background-color: green;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            list-style: none;
+            text-align: center;
+        }
+
+        .opciones li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .opciones li a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 2px solid red;
+        }
+
+        th {
+            background-color: yellow;
+            color: black;
+            cursor: pointer;
+        }
+
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: blue;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkblue;
+        }
+
+        .btn-accion {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        select, input {
+            margin: 5px 0;
+            padding: 6px;
+        }
+
+        #formularioNuevoUsuario {
+            background-color: #fff3cd;
+            border: 2px solid red;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .rol-image {
+            margin-top: 10px;
+            width: 150px;
+            height: auto;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        h3 {
+            color: #b30000;
+        }
+    </style>
+
+    <script>
+        let ordenAscendente = true;
+
+        function mostrarFormulario() {
+            const form = document.getElementById("formularioNuevoUsuario");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        function ordenarTablaPorId() {
+            const table = document.getElementById("tablaUsuarios");
+            const rows = Array.from(table.rows).slice(1);
+            rows.sort((a, b) => {
+                const idA = parseInt(a.cells[0].textContent);
+                const idB = parseInt(b.cells[0].textContent);
+                return ordenAscendente ? idA - idB : idB - idA;
+            });
+            rows.forEach(row => table.appendChild(row));
+            ordenAscendente = !ordenAscendente;
+        }
+
+        function filtrarPorRol() {
+            const rolSeleccionado = document.getElementById("rolFiltro").value;
+            const rows = Array.from(document.getElementById("tablaUsuarios").rows).slice(1);
+            rows.forEach(row => {
+                const rolCell = row.cells[6].textContent.trim();
+                row.style.display = (rolSeleccionado === "todos" || rolCell.includes(rolSeleccionado)) ? "" : "none";
+            });
+        }
+
+        function actualizarImagenRolNuevo() {
+            const rol = document.getElementById("rolNuevo").value;
+            const img = document.getElementById("imagenRolNuevo");
+            if (rol === "ADMIN") {
+                img.src = "/img/Gallina_fina.png";
+                img.alt = "Gallina Admin";
+            } else {
+                img.src = "/img/Gallina_cliente.png";
+                img.alt = "Gallina Cliente";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectRol = document.getElementById("rolNuevo");
+            if (selectRol) {
+                selectRol.addEventListener("change", actualizarImagenRolNuevo);
+                actualizarImagenRolNuevo(); // Inicial
+            }
+        });
+    </script>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="imagen-admin-container">
+        <img class="imagen-admin" src="/img/Gallina_fina.png" alt="Gallina Admin">
+    </div>
+    <div class="bienvenida">
+        <p>Bienvenido,</p>
+        <p class="username" th:text="${username}">Usuario</p>
+    </div>
+
+    <h2>Opciones:</h2>
+    <ul class="opciones">
+        <li><a href="/admin/usuarios">Usuarios</a></li>
+        <li><a href="/admin/productos">Productos</a></li>
+        <li><a href="/admin/ventas">Ventas</a></li>
+        <!-- Aquí agregamos el enlace para cerrar sesión -->
+        <li><a href="/logout">Cerrar sesión</a></li>
+    </ul>
+</div>
+
+<div class="main-content" th:if="${usuarios != null}">
+    <h3>Lista de Usuarios</h3>
+
+    <label for="rolFiltro">Filtrar por Rol:</label>
+    <select id="rolFiltro" onchange="filtrarPorRol()">
+        <option value="todos">Todos</option>
+        <option value="ADMIN">ADMIN</option>
+        <option value="CLIENTE">CLIENTE</option>
+    </select>
+
+    <button onclick="ordenarTablaPorId()">Ordenar por ID</button>
+
+    <table id="tablaUsuarios">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo</th>
+            <th>Contraseña</th>
+            <th>Roles</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.id}">1</td>
+            <td th:text="${usuario.username}">user</td>
+            <td th:text="${usuario.nombre}">nombre</td>
+            <td th:text="${usuario.apellido}">apellido</td>
+            <td th:text="${usuario.correo}">correo</td>
+            <td th:text="${usuario.password}">contraseña</td>
+            <td>
+                <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre + ' '}"/>
+            </td>
+            <td>
+                <a th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}">
+                    <button class="btn-accion">Editar</button>
+                </a>
+                <a th:href="@{/admin/usuarios/{id}/eliminar(id=${usuario.id})}">
+                    <button class="btn-accion">Eliminar</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button onclick="mostrarFormulario()">Agregar Nuevo Usuario</button>
+
+    <div id="formularioNuevoUsuario" style="display: none;">
+        <h3>Formulario de Nuevo Usuario</h3>
+        <form action="#" th:action="@{/admin/usuarios}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required><br>
+
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido" required><br>
+
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" name="correo" required><br>
+
+            <label for="rol">Rol:</label>
+            <select id="rolNuevo" name="rol">
+                <option value="ADMIN">ADMIN</option>
+                <option value="CLIENTE">CLIENTE</option>
+            </select><br>
+
+            <img id="imagenRolNuevo" class="rol-image" src="/img/Gallina_fina.png" alt="Imagen Rol"><br>
+
+            <button type="submit">Crear Usuario</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

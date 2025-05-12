@@ -27,18 +27,19 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/carta", "/registro", "/contacto", "/css/**", "/img/**").permitAll()
+                        .requestMatchers("/", "/carta", "/registro", "/contacto", "/login", "/loginadmin", "/registroadmin", "/repoadmin", "/css/**", "/img/**").permitAll()  // Permitir acceso a /loginadmin
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Solo admin puede acceder a /admin/**
+                        .anyRequest().authenticated()  // Otros accesos requieren autenticación
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .loginPage("/login")  // Ruta para la página de login estándar
+                        .loginProcessingUrl("/login") // URL para la autenticación, esta es la que se manejará
+                        .defaultSuccessUrl("/repoadmin", true)  // Redirigir al admin a /repoadmin después de un login exitoso
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/")  // Redirigir a la página de inicio después de logout
                         .permitAll()
                 );
         return http.build();
