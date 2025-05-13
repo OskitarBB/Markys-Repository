@@ -17,9 +17,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler successHandler;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          CustomAuthenticationSuccessHandler successHandler) {
         this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -27,21 +30,26 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/carta", "/registro", "/contacto", "/login", "/loginadmin", "/registroadmin", "/repoadmin", "/css/**", "/img/**").permitAll()  // Permitir acceso a /loginadmin
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Solo admin puede acceder a /admin/**
-                        .anyRequest().authenticated()  // Otros accesos requieren autenticación
+                        .requestMatchers(
+                                "/", "/carta", "/registro", "/contacto",
+                                "/login", "/loginadmin", "/registroadmin",
+                                "/inicio",
+                                "/css/**", "/img/**"
+                        ).permitAll()
+                        .requestMatchers("/repoadmin", "/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")  // Ruta para la página de login estándar
-                        .loginProcessingUrl("/login") // URL para la autenticación, esta es la que se manejará
-                        .defaultSuccessUrl("/repoadmin", true)  // Redirigir al admin a /repoadmin después de un login exitoso
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .successHandler(successHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")  // Redirigir a la página de inicio después de logout
+                        .logoutSuccessUrl("/")
                         .permitAll()
                 );
+
         return http.build();
     }
 
