@@ -33,20 +33,20 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/carta", "/registro", "/contacto",
                                 "/login", "/loginadmin", "/registroadmin",
-                                "/inicio",
+                                "/inicio", // permite acceso a la ruta que carga inicio.html
                                 "/css/**", "/img/**"
                         ).permitAll()
                         .requestMatchers("/repoadmin", "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .successHandler(successHandler)
+                        .loginPage("/login")                  // Página personalizada de login
+                        .loginProcessingUrl("/login")         // URL que procesa el POST del login
+                        .successHandler(successHandler)       // Redirección dinámica por rol
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/")                // Redirige al home al hacer logout
                         .permitAll()
                 );
 

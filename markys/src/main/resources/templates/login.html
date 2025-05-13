@@ -3,12 +3,118 @@
 <head>
     <title>Login</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <style>
+        /* Establecer fondo con la imagen */
+        body {
+            background-image: url('/img/fondo_registropollo.jpeg'); /* Asegúrate de que la imagen esté en la carpeta img */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilo del contenedor de login */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Estilo del cuadro que contiene el formulario y la imagen */
+        .login-form-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Título */
+        .login-form-container h2 {
+            color: #FF0000; /* Rojo */
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo de las etiquetas y los inputs */
+        .form-group label {
+            color: #FF9900; /* Amarillo */
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Estilo del botón de submit */
+        .btn-submit {
+            background-color: #FF0000; /* Rojo */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: #FF6600; /* Naranja */
+        }
+
+        /* Enlace de registro */
+        .registro-a {
+            color: #FF9900; /* Amarillo */
+            text-decoration: none;
+        }
+
+        .registro-a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mensajes de error y éxito */
+        .error-message {
+            color: #FF0000;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: #008000;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Imagen dentro del formulario */
+        .login-image img {
+            width: 150px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="login-container">
-    <div class="login-form">
+    <div class="login-form-container">
         <h2>Iniciar Sesión</h2>
+
+        <!-- Imagen dentro del cuadro -->
+        <div class="login-image">
+            <img src="/img/sesion_pollo.png" alt="Imagen de Login">
+        </div>
+
         <form th:action="@{/login}" method="post">
             <div class="form-group">
                 <label>Usuario:</label>
@@ -31,13 +137,6 @@
         <div th:if="${param.logout}">
             <p class="success-message">Has cerrado sesión exitosamente</p>
         </div>
-    </div>
-    <div class="login-image">
-        <br>
-        <img src="/img/sesion_pollo.png" alt="Imagen de Login">
-        <br>
-        <br>
-        <a th:href="@{/loginadmin}" class="btn-submit">Registrarse como admin</a>
     </div>
 </div>
 </body>
