@@ -38,19 +38,25 @@ public class AdminController {
     }
 
     @GetMapping("/admin/usuarios")
-    public String mostrarUsuarios(Model model) {
+    public String mostrarUsuarios(@RequestParam(value = "rol", required = false) String rol, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         model.addAttribute("username", username);
 
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios;
+        if (rol != null && !rol.equalsIgnoreCase("todos")) {
+            usuarios = usuarioRepository.findByRolesNombre(rol);
+        } else {
+            usuarios = usuarioRepository.findAll();
+            rol = "todos"; // Importante: por si viene null, para que se marque en el select
+        }
+
         model.addAttribute("usuarios", usuarios);
-
-        List<Rol> roles = rolRepository.findAll();
-        model.addAttribute("roles", roles);
-
+        model.addAttribute("roles", rolRepository.findAll());
+        model.addAttribute("rolSeleccionado", rol); // 🔥 Aquí se pasa al HTML
         return "repoadmin";
     }
+
 
 
     @PostMapping("/admin/usuarios")

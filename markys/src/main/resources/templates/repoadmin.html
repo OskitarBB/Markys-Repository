@@ -229,12 +229,14 @@
 <div class="main-content" th:if="${usuarios != null}">
     <h3>Lista de Usuarios</h3>
 
-    <label for="rolFiltro">Filtrar por Rol:</label>
-    <select id="rolFiltro" onchange="filtrarPorRol()">
-        <option value="todos">Todos</option>
-        <option value="ADMIN">ADMIN</option>
-        <option value="CLIENTE">CLIENTE</option>
-    </select>
+    <form method="get" action="/admin/usuarios">
+        <label for="rolFiltro">Filtrar por Rol:</label>
+        <select name="rol" id="rolFiltro" onchange="this.form.submit()">
+            <option value="todos" th:selected="${rolSeleccionado == 'todos'}">Todos</option>
+            <option value="ADMIN" th:selected="${rolSeleccionado == 'ADMIN'}">ADMIN</option>
+            <option value="CLIENTE" th:selected="${rolSeleccionado == 'CLIENTE'}">CLIENTE</option>
+        </select>
+    </form>
 
     <button onclick="ordenarTablaPorId()">Ordenar por ID</button>
 
