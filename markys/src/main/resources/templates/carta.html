@@ -9,7 +9,7 @@
 
 <header class="d-flex align-items-center justify-content-between p-3">
   <a th:href="@{/}">
-    <img class="logoprin" th:src="@{img/logo_markys.png}" alt="Logo" style="width: 300px; height: 190px;">
+    <img class="logoprin" th:src="@{/img/logo_markys.png}" alt="Logo" style="width: 300px; height: 190px;">
   </a>
   <h1 class="bienvenida mb-0 text-end">Bienvenidos a la Pollería Marky's</h1>
 </header>
@@ -22,11 +22,42 @@
   <h2>¡Nuestros Platillos!</h2>
   <p>Disfruta de los mejores platillos de Marky's Pollos a la Brasa.</p>
 
-  <!-- Aquí agregamos los platillos -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <!-- Título alineado a la izquierda -->
+
+    <!-- Formulario de búsqueda decorado a la derecha -->
+    <form th:action="@{/platillos/buscar}" method="get" style="
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #f1f1f1;
+      padding: 8px 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  ">
+      <input type="text" name="nombre" placeholder="Buscar platillo..." style="
+        padding: 6px 10px;
+        border: none;
+        border-radius: 8px;
+        outline: none;
+        min-width: 180px;
+    "/>
+      <button type="submit" style="
+        background-color: #e63946;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    ">Buscar</button>
+    </form>
+  </div>
+
+
+  <!-- Contenedor de platillos -->
   <div class="platillo-container">
-    <!-- Loop de Thymeleaf para renderizar los platillos -->
     <div th:each="platillo : ${platillos}" class="platillo-card">
-      <!-- Imágenes de los platillos -->
       <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Platillo" class="platillo-imagen">
       <h3 th:text="${platillo.nombre}"></h3>
       <p th:text="${platillo.descripcion}"></p>
@@ -35,6 +66,7 @@
     </div>
   </div>
 </section>
+
 
 <footer>
   <div class="footer-content">
