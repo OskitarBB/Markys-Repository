@@ -52,8 +52,17 @@ public class HomeController {
         return "contacto";
     }
 
+    /*
     @GetMapping("/delivery")
     public String delivery() {
+        return "delivery";
+    }
+    */
+
+    @GetMapping("/delivery")
+    public String mostrarDelivery(Model model) {
+        List<Platillo> listaPlatillos = servicioPlatillo.obtenerTodos();
+        model.addAttribute("platillos", listaPlatillos);
         return "delivery";
     }
 
