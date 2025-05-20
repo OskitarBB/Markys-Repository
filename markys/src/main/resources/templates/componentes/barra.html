@@ -5,9 +5,8 @@
   <nav>
     <a th:href="@{/}">Inicio</a>
     <a th:href="@{/carta}" class="active">Carta</a>
-    <a th:href="@{/delivery}">Delivery</a>
     <a th:href="@{/contacto}">Contactos</a>
-    <a th:href="@{/carrito}">Carrito</a>
+    <a th:href="@{/delivery}">¡Pide Online!</a>
 
     <!-- Mostrar links según estado de autenticación -->
     <a th:if="${#authentication != null and #authentication.principal != null}" th:href="@{/logout}">Cerrar Sesión</a>

@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome corregido -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS local -->
+    <link rel="stylesheet" th:href="@{/css/carrito.css}">
+    <title>Marky's | Delivery</title>
 </head>
 <body>
-    <h1>Hola</h1>
+<header>
+    <h1>Pida nuestros deliciosos pollos a la brasa</h1>
+</header>
+<section class="contenedor">
+    <!-- Contenedor de elementos -->
+    <div class="contenedor-items">
+        <div class="item">
+            <span class="titulo-item">1 pollo a la brasa</span>
+            <img th:src="@{/img/1pollo.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.15.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Papas fritas</span>
+            <img th:src="@{/img/papasfritas.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.25.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 1</span>
+            <img th:src="@{/img/promo1.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.35.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 2</span>
+            <img th:src="@{/img/promo2.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.18.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 3</span>
+            <img th:src="@{/img/promo3.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.32.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 4</span>
+            <img th:src="@{/img/promo4.png}" alt="" class="img-item">
+            <span class="precio-item">S/.18.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 5</span>
+            <img th:src="@{/img/promo5.png}" alt="" class="img-item">
+            <span class="precio-item">S/.54.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 7</span>
+            <img th:src="@{/img/promo7.png}" alt="" class="img-item">
+            <span class="precio-item">S/.32.00</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+        <div class="item">
+            <span class="titulo-item">Promo 1</span>
+            <img th:src="@{/img/promo1.jpg}" alt="" class="img-item">
+            <span class="precio-item">S/.42.80</span>
+            <button class="boton-item">Agregar al Carrito</button>
+        </div>
+    </div>
+    <!-- Carrito de Compras -->
+    <div class="carrito" id="carrito">
+        <div class="header-carrito">
+            <h2>Tu Carrito</h2>
+        </div>
+
+        <div class="carrito-items">
+            <!-- Ejemplos comentados de items en carrito -->
+        </div>
+        <div class="carrito-total">
+            <div class="fila">
+                <strong>Tu Total</strong>
+                <span class="carrito-precio-total">
+                    S/. 120.00
+                </span>
+            </div>
+            <button class="btn-pagar">Pagar <i class="fa-solid fa-bag-shopping"></i></button>
+        </div>
+    </div>
+</section>
+
+
+<script th:src="@{/js/carritocomp.js}"></script>
 </body>
 </html>
