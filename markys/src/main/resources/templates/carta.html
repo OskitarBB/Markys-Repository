@@ -75,44 +75,6 @@
 </section>
 
 
-<footer>
-  <div class="footer-content">
-    <div class="footer-section">
-      <img th:src="@{/img/logo_markys.png}" alt="Logo Marky's" class="footer-logo" style="width:160px; height:180px">
-      <p><strong>Marky’s</strong><br>Trayendo alegría, felicidad<br>y sazón para todos</p>
-    </div>
-
-    <div class="footer-section">
-      <h4>LEGAL</h4>
-      <p>Términos y condiciones</p>
-      <p>Políticas de privacidad</p>
-      <p>Razones Sociales y Ruc</p>
-    </div>
-
-    <div class="footer-section">
-      <h4>Nuestras redes y contactos</h4>
-      <p>
-        <img th:src="@{/img/whatsapp_logo.png}" alt="WhatsApp" class="icono"> 942970786
-      </p>
-      <p>
-        <img th:src="@{/img/facebook_logo.png}" alt="Facebook" class="icono"> Marky’s
-      </p>
-    </div>
-
-    <div class="footer-section">
-      <h4>Formas de pago</h4>
-      <div class="metodos-pago">
-        <img th:src="@{/img/yape_logo.png}" alt="Yape">
-        <img th:src="@{/img/visa_logo.png}" alt="Visa">
-        <img th:src="@{/img/mastercard_logo.png}" alt="Mastercard">
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-copy">
-    <p>&copy; 2025 Pollería Marky’s. Todos los derechos reservados.</p>
-  </div>
-</footer>
-
+<div th:replace="componentes/footer :: footer-general"></div>
 </body>
 </html>
