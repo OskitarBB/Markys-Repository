@@ -74,6 +74,29 @@ function hacerVisibleCarrito(){
     var items = document.getElementsByClassName('contenedor-items')[0];
     items.style.width = '60%';
 }
+//Función para filtrar en Delivery
+function filtrarDelivery() {
+    var input = document.getElementById("filtroDelivery");
+    var filtro = input.value.toLowerCase();
+    var productos = document.getElementsByClassName("producto-delivery");
+    var mensaje = document.getElementById("mensaje-vacio");
+
+    var hayCoincidencias = false;
+
+    for (var i = 0; i < productos.length; i++) {
+        var nombre = productos[i].querySelector(".nombre-producto").textContent.toLowerCase();
+        if (nombre.includes(filtro)) {
+            productos[i].style.display = "";
+            hayCoincidencias = true;
+        } else {
+            productos[i].style.display = "none";
+        }
+    }
+
+    mensaje.style.display = hayCoincidencias ? "none" : "block";
+}
+
+
 
 // Función que agrega un item al carrito
 function agregarItemAlCarrito(titulo, precio, imagenSrc){

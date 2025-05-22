@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Nuestros Platillos y Promos</title>
   <link rel="stylesheet" th:href="@{/css/estilos.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
 
@@ -22,11 +24,8 @@
   <h2>¡Nuestros Platillos!</h2>
   <p>Disfruta de los mejores platillos de Marky's Pollos a la Brasa.</p>
 
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-    <!-- Título alineado a la izquierda -->
-
-    <!-- Formulario de búsqueda decorado a la derecha -->
-    <form th:action="@{/platillos/buscar}" method="get" style="
+  <div style="display: flex; justify-content: flex-start; align-items: center; margin: 1rem 0;">
+    <form th:action="@{/carta}" method="get" style="
       display: flex;
       align-items: center;
       gap: 8px;
@@ -35,24 +34,32 @@
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   ">
-      <input type="text" name="nombre" placeholder="Buscar platillo..." style="
-        padding: 6px 10px;
-        border: none;
-        border-radius: 8px;
-        outline: none;
-        min-width: 180px;
-    "/>
+      <input type="text" name="nombre" placeholder="Buscar producto..." style="
+          padding: 6px 10px;
+          border: none;
+          border-radius: 8px;
+          outline: none;
+          min-width: 200px;
+      " th:value="${param.nombre}" />
       <button type="submit" style="
-        background-color: #e63946;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-    ">Buscar</button>
+          background-color: #e63946;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+      ">
+        <i class="fa fa-search" style="margin-right: 6px;"></i> Buscar
+      </button>
     </form>
   </div>
+
+
+  <p th:if="${#lists.isEmpty(platillos)}" style="text-align: center;">No se encontraron los productos.</p>
+
 
 
   <!-- Contenedor de platillos -->
@@ -71,7 +78,7 @@
 <footer>
   <div class="footer-content">
     <div class="footer-section">
-      <img src="img/logo_markys.png" alt="Logo Marky's" class="footer-logo" style="width:160px; height:180px">
+      <img th:src="@{/img/logo_markys.png}" alt="Logo Marky's" class="footer-logo" style="width:160px; height:180px">
       <p><strong>Marky’s</strong><br>Trayendo alegría, felicidad<br>y sazón para todos</p>
     </div>
 
@@ -85,19 +92,19 @@
     <div class="footer-section">
       <h4>Nuestras redes y contactos</h4>
       <p>
-        <img src="img/whatsapp_logo.png" alt="WhatsApp" class="icono"> 942970786
+        <img th:src="@{/img/whatsapp_logo.png}" alt="WhatsApp" class="icono"> 942970786
       </p>
       <p>
-        <img src="img/facebook_logo.png" alt="Facebook" class="icono"> Marky’s
+        <img th:src="@{/img/facebook_logo.png}" alt="Facebook" class="icono"> Marky’s
       </p>
     </div>
 
     <div class="footer-section">
       <h4>Formas de pago</h4>
       <div class="metodos-pago">
-        <img src="img/yape_logo.png" alt="Yape">
-        <img src="img/visa_logo.png" alt="Visa">
-        <img src="img/mastercard_logo.png" alt="Mastercard">
+        <img th:src="@{/img/yape_logo.png}" alt="Yape">
+        <img th:src="@{/img/visa_logo.png}" alt="Visa">
+        <img th:src="@{/img/mastercard_logo.png}" alt="Mastercard">
       </div>
     </div>
   </div>

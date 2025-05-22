@@ -17,4 +17,9 @@ public class ServicioPlatillo {
     public List<Platillo> obtenerTodos() {
         return repositorio.findAll();
     }
+
+    public List<Platillo> buscarPorNombre(String nombre) {
+        return repositorio.buscarPorNombre(nombre);
+    }
+
 }

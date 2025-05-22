@@ -41,11 +41,19 @@ public class HomeController {
     }
 
     @GetMapping("/carta")
-    public String mostrarCarta(Model model) {
-        List<Platillo> platillos = servicioPlatillo.obtenerTodos();
+    public String mostrarCarta(@RequestParam(value = "nombre", required = false) String nombre, Model model) {
+        List<Platillo> platillos;
+
+        if (nombre != null && !nombre.isEmpty()) {
+            platillos = servicioPlatillo.buscarPorNombre(nombre);
+        } else {
+            platillos = servicioPlatillo.obtenerTodos();
+        }
+
         model.addAttribute("platillos", platillos);
         return "carta";
     }
+
 
     @GetMapping("/contacto")
     public String contacto() {
@@ -65,6 +73,13 @@ public class HomeController {
         model.addAttribute("platillos", listaPlatillos);
         return "delivery";
     }
+    @GetMapping("/delivery/buscar")
+    public String buscarPlatillosDelivery(@RequestParam("nombre") String nombre, Model model) {
+        List<Platillo> platillosFiltrados = servicioPlatillo.buscarPorNombre(nombre);
+        model.addAttribute("platillos", platillosFiltrados);
+        return "delivery";
+    }
+
 
     @GetMapping("/carrito")
     public String carrito() {

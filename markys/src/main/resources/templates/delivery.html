@@ -14,15 +14,55 @@
 <header>
     <h1>Pida nuestros deliciosos pollos a la brasa</h1>
 </header>
+<div style="display: flex; justify-content: flex-start; align-items: center; margin: 1rem 0;">
+    <form onsubmit="event.preventDefault(); filtrarDelivery();" style="
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #f1f1f1;
+        padding: 8px 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    ">
+        <input type="text" id="filtroDelivery" placeholder="Buscar producto..." style="
+            padding: 6px 10px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            min-width: 200px;
+        "/>
+        <button type="submit" style="
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        ">
+            <i class="fa fa-search" style="margin-right: 6px;"></i> Buscar
+        </button>
+    </form>
+</div>
+
+
+<p id="mensaje-vacio" style="text-align: center; display: none; font-weight: bold;">
+    No se encontraron productos.
+</p>
+
+
 <section class="contenedor">
     <!-- Contenedor de elementos -->
     <div class="contenedor-items">
-        <div th:each="platillo : ${platillos}" class="item">
-            <span class="titulo-item" th:text="${platillo.nombre}">Nombre</span>
+        <div th:each="platillo : ${platillos}" class="item producto-delivery">
+            <span class="titulo-item nombre-producto" th:text="${platillo.nombre}">Nombre</span>
             <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Platillo" class="img-item">
             <span class="precio-item" th:text="'S/. ' + ${platillo.precio}">S/.00.00</span>
             <button class="boton-item">Agregar al Carrito</button>
         </div>
+
     </div>
 
     <!-- Carrito de Compras -->
