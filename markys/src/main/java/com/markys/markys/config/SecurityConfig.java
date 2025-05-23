@@ -32,9 +32,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/carta", "/registro", "/contacto",
-                                "/login", "/loginadmin", "/registroadmin", "/platillos/**",
-                                "/inicio", // permite acceso a la ruta que carga inicio.html
-                                "/css/**", "/img/**"
+                                "/login", "/loginadmin", "/registroadmin", "/platillos/**", "/platimg/**",
+                                "/inicio", "/css/**", "/img/**"
                         ).permitAll()
                         .requestMatchers("/repoadmin", "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

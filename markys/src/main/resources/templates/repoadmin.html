@@ -206,7 +206,6 @@
     </script>
 </head>
 <body>
-
 <div class="sidebar">
     <div class="imagen-admin-container">
         <img class="imagen-admin" src="/img/Gallina_fina.png" alt="Gallina Admin">
@@ -218,20 +217,19 @@
 
     <h2>Opciones:</h2>
     <ul class="opciones">
-        <li><a href="/admin/usuarios">Usuarios</a></li>
-        <li><a href="/admin/productos">Productos</a></li>
+        <li><a href="/admin/usuarios?seccion=usuarios">Usuarios</a></li>
+        <li><a href="/admin/usuarios?seccion=platillos">Platillos</a></li>
         <li><a href="/admin/ventas">Ventas</a></li>
-        <!-- Aquí agregamos el enlace para cerrar sesión -->
         <li><a href="/logout">Cerrar sesión</a></li>
     </ul>
 </div>
 
-<div class="main-content" th:if="${usuarios != null}">
+<div class="main-content" th:if="${seccion == 'usuarios'} and ${usuarios != null}">
     <h3>Lista de Usuarios</h3>
 
     <form method="get" action="/admin/usuarios">
-        <label for="rolFiltro">Filtrar por Rol:</label>
-        <select name="rol" id="rolFiltro" onchange="this.form.submit()">
+        <label for="usuario_rolFiltro">Filtrar por Rol:</label>
+        <select name="rol" id="usuario_rolFiltro" onchange="this.form.submit()">
             <option value="todos" th:selected="${rolSeleccionado == 'todos'}">Todos</option>
             <option value="ADMIN" th:selected="${rolSeleccionado == 'ADMIN'}">ADMIN</option>
             <option value="CLIENTE" th:selected="${rolSeleccionado == 'CLIENTE'}">CLIENTE</option>
@@ -281,33 +279,230 @@
     <div id="formularioNuevoUsuario" style="display: none;">
         <h3>Formulario de Nuevo Usuario</h3>
         <form action="#" th:action="@{/admin/usuarios}" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>
+            <label for="usuario_username">Username:</label>
+            <input type="text" id="usuario_username" name="username" required><br>
 
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required><br>
+            <label for="usuario_password">Contraseña:</label>
+            <input type="password" id="usuario_password" name="password" required><br>
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required><br>
+            <label for="usuario_nombre">Nombre:</label>
+            <input type="text" id="usuario_nombre" name="nombre" required><br>
 
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required><br>
+            <label for="usuario_apellido">Apellido:</label>
+            <input type="text" id="usuario_apellido" name="apellido" required><br>
 
-            <label for="correo">Correo:</label>
-            <input type="email" id="correo" name="correo" required><br>
+            <label for="usuario_correo">Correo:</label>
+            <input type="email" id="usuario_correo" name="correo" required><br>
 
-            <label for="rol">Rol:</label>
-            <select id="rolNuevo" name="rol">
+            <label for="usuario_rolNuevo">Rol:</label>
+            <select id="usuario_rolNuevo" name="rol">
                 <option value="ADMIN">ADMIN</option>
                 <option value="CLIENTE">CLIENTE</option>
             </select><br>
 
-            <img id="imagenRolNuevo" class="rol-image" src="/img/Gallina_fina.png" alt="Imagen Rol"><br>
+            <img id="usuario_imagenRolNuevo" class="rol-image" src="/img/Gallina_fina.png" alt="Imagen Rol"><br>
 
             <button type="submit">Crear Usuario</button>
         </form>
     </div>
 </div>
+
+<th:block th:if="${seccion == 'platillos'} and ${platillos != null}">
+    <div class="main-content">
+        <h3>Lista de Platillos</h3>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="platillo : ${platillos}">
+                <td th:text="${platillo.id}">1</td>
+                <td th:text="${platillo.nombre}">Nombre</td>
+                <td th:text="${platillo.descripcion}">Descripción</td>
+                <td th:text="${platillo.precio}">S/ 0.00</td>
+                <td th:text="${platillo.estado}">DISPONIBLE</td>
+                <td>
+                    <img th:src="@{/platimg/{nombre}(nombre=${platillo.imagen})}" alt="Imagen" style="width: 100px; border-radius: 5px;">
+                </td>
+                <td>
+                    <button class="btn-accion"
+                            th:attr="data-id=${platillo.id},
+                                     data-nombre=${platillo.nombre},
+                                     data-descripcion=${platillo.descripcion},
+                                     data-precio=${platillo.precio},
+                                     data-estado=${platillo.estado}"
+                            onclick="abrirModalEditarDesdeBoton(this)">
+                        Editar
+                    </button>
+
+                    <!-- Botón Eliminar SIN enlace <a> -->
+                    <button class="btn-accion"
+                            th:attr="data-id=${platillo.id}, data-nombre=${platillo.nombre}"
+                            onclick="abrirModalEliminarPlatillo(this)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button id="btnAgregarPlatillo">Agregar Platillo</button>
+    </div>
+</th:block>
+
+<!-- Modal para agregar platillo -->
+<div id="modalAgregarPlatillo" class="modal" style="display:none; position: fixed; top:0; left:0; width: 100%; height:100%; background: rgba(0,0,0,0.5);">
+    <div style="background: white; padding: 20px; width: 400px; margin: 100px auto; border-radius: 10px; position: relative;">
+        <h3>Nuevo Platillo</h3>
+        <form th:action="@{/admin/platillos}" method="post" enctype="multipart/form-data">
+            <label for="platillo_nombre">Nombre:</label><br>
+            <input type="text" id="platillo_nombre" name="nombre" required><br>
+
+            <label for="platillo_descripcion">Descripción:</label><br>
+            <textarea id="platillo_descripcion" name="descripcion" rows="3" required></textarea><br>
+
+            <label for="platillo_precio">Precio:</label><br>
+            <input type="number" id="platillo_precio" name="precio" step="0.01" min="0" required><br>
+
+            <label for="platillo_estado">Estado:</label><br>
+            <select id="platillo_estado" name="estado" required>
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="AGOTADO">AGOTADO</option>
+            </select><br>
+
+            <label for="platillo_imagen">Imagen:</label><br>
+            <input type="file" id="platillo_imagen" name="imagen" accept="image/*" required><br><br>
+
+            <button type="submit">Guardar Platillo</button>
+            <button type="button" id="btnCerrarModal">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para editar platillo -->
+<div id="modalEditarPlatillo" class="modal" style="display:none; position: fixed; top:0; left:0; width: 100%; height:100%; background: rgba(0,0,0,0.5);">
+    <div style="background: white; padding: 20px; width: 400px; margin: 100px auto; border-radius: 10px; position: relative;">
+        <h3>Editar Platillo</h3>
+        <form th:action="@{/admin/platillos/editar}" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="editar_id" name="id">
+
+            <label for="editar_nombre">Nombre:</label><br>
+            <input type="text" id="editar_nombre" name="nombre" required><br>
+
+            <label for="editar_descripcion">Descripción:</label><br>
+            <textarea id="editar_descripcion" name="descripcion" rows="3" required></textarea><br>
+
+            <label for="editar_precio">Precio:</label><br>
+            <input type="number" id="editar_precio" name="precio" step="0.01" min="0" required><br>
+
+            <label for="editar_estado">Estado:</label><br>
+            <select id="editar_estado" name="estado" required>
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="AGOTADO">AGOTADO</option>
+            </select><br>
+
+            <label for="editar_imagen">Imagen:</label><br>
+            <input type="file" id="editar_imagen" name="imagen" accept="image/*"><br><br>
+
+            <button type="submit">Guardar Cambios</button>
+            <button type="button" id="btnCerrarEditarModal">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div id="modalEliminarPlatillo" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5);">
+    <div style="background:white; padding:20px; width:400px; margin:100px auto; border-radius:10px; position:relative;">
+        <h3>Confirmar Eliminación</h3>
+        <p id="mensajeEliminar">¿Estás seguro de que deseas eliminar este platillo?</p>
+        <form id="formEliminarPlatillo" method="post" action="">
+            <input type="hidden" id="eliminar_id">
+            <button type="submit">Sí, eliminar</button>
+            <button type="button" onclick="cerrarModalEliminarPlatillo()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts para manejar modales -->
+<script>
+    const btnAbrir = document.getElementById('btnAgregarPlatillo');
+    const modalAgregar = document.getElementById('modalAgregarPlatillo');
+    const btnCerrar = document.getElementById('btnCerrarModal');
+
+    btnAbrir.addEventListener('click', () => {
+        modalAgregar.style.display = 'block';
+    });
+
+    btnCerrar.addEventListener('click', () => {
+        modalAgregar.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modalAgregar) {
+            modalAgregar.style.display = 'none';
+        }
+        if (e.target === modalEditar) {
+            modalEditar.style.display = 'none';
+        }
+        if (e.target === modalEliminar) {
+            modalEliminar.style.display = 'none';
+        }
+    });
+
+    // Modal Editar
+    const modalEditar = document.getElementById('modalEditarPlatillo');
+    const btnCerrarEditar = document.getElementById('btnCerrarEditarModal');
+
+    function abrirModalEditarDesdeBoton(boton) {
+        const id = boton.getAttribute('data-id');
+        const nombre = boton.getAttribute('data-nombre');
+        const descripcion = boton.getAttribute('data-descripcion');
+        const precio = boton.getAttribute('data-precio');
+        const estado = boton.getAttribute('data-estado');
+
+        modalEditar.style.display = 'block';
+        document.getElementById('editar_id').value = id;
+        document.getElementById('editar_nombre').value = nombre;
+        document.getElementById('editar_descripcion').value = descripcion;
+        document.getElementById('editar_precio').value = precio;
+        document.getElementById('editar_estado').value = estado;
+    }
+
+    btnCerrarEditar.addEventListener('click', () => {
+        modalEditar.style.display = 'none';
+    });
+
+    // Modal Eliminar
+    const modalEliminar = document.getElementById('modalEliminarPlatillo');
+    const formEliminar = document.getElementById('formEliminarPlatillo');
+    const mensajeEliminar = document.getElementById('mensajeEliminar');
+
+    function abrirModalEliminarPlatillo(boton) {
+        const id = boton.getAttribute('data-id');
+        const nombre = boton.getAttribute('data-nombre');
+
+        mensajeEliminar.textContent = `¿Estás seguro de que deseas eliminar el platillo "${nombre}" ?`;
+
+        formEliminar.setAttribute('action', `/admin/platillos/${id}/eliminar`);
+        document.getElementById('eliminar_id').value = id;
+
+        modalEliminar.style.display = 'block';
+    }
+
+    function cerrarModalEliminarPlatillo() {
+        modalEliminar.style.display = 'none';
+    }
+</script>
+
 
 </body>
 </html>

@@ -14,8 +14,10 @@ public class Platillo {
     private String nombre;
     private String descripcion;
     private BigDecimal precio;
+
     @Enumerated(EnumType.STRING)
     private Estado estado;
+
     private String imagen;
 
     public Platillo() {
@@ -28,6 +30,17 @@ public class Platillo {
         this.estado = estado;
         this.imagen = imagen;
     }
+
+    // Agregar getter y setter para id
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    // Getters y setters existentes...
 
     public String getNombre() {
         return nombre;
