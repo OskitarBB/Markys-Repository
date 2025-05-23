@@ -42,26 +42,6 @@ function ready(){
 }
 
 // Eliminamos todos los elementos del carrito y lo ocultamos
-function pagarClicked(){
-    document.getElementById("modalOpciones").style.display = "block";
-}
-
-function cerrarModal(){
-    document.getElementById("modalOpciones").style.display = "none";
-}
-
-function recogerEnTienda(){
-    cerrarModal();
-    alert("¡Gracias por tu compra! Puedes recoger tu pedido en tienda.");
-    vaciarCarrito();
-}
-
-function delivery(){
-    cerrarModal();
-    alert("Lo sentimos, aún no contamos con servicio de delivery.");
-    // Si luego decides implementarlo, aquí podrías abrir otro modal/formulario.
-}
-
 function vaciarCarrito() {
     var carritoItems = document.getElementsByClassName('carrito-items')[0];
     while (carritoItems.hasChildNodes()) {
@@ -242,3 +222,33 @@ function actualizarTotalCarrito(){
     document.getElementsByClassName('carrito-precio-total')[0].innerText =
         'S/.' + total.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
+//Opciones en los modales
+function pagarClicked() {
+    document.getElementById("modalOpciones").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("modalOpciones").style.display = "none";
+}
+
+function mostrarModalDireccion() {
+    cerrarModal();
+    document.getElementById("modalDireccion").style.display = "flex";
+}
+
+function cerrarModalDireccion() {
+    document.getElementById("modalDireccion").style.display = "none";
+}
+
+function continuarConPago() {
+    cerrarModalDireccion();
+    vaciarCarrito();
+    // Aquí luego pondrás tu integración con Mercado Pago
+    window.location.href = "https://www.youtube.com/watch?v=IQu-BqiZF2M"; // ruta provisional
+}
+
+function delivery() {
+    cerrarModal();
+    alert("Lo sentimos, aún no contamos con servicio de delivery.");
+}
+

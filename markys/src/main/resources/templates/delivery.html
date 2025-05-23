@@ -16,8 +16,6 @@
 <header>
     <h1>Pida nuestros deliciosos pollos a la brasa</h1>
 </header>
-<h2>Recuerde recoger su pedido en:</h2>
-<h3>7QMV+664, Las Americas, Pisco 11601</h3>
 <div style="display: flex; justify-content: flex-start; align-items: center; margin: 1rem 0;">
     <form onsubmit="event.preventDefault(); filtrarDelivery();" style="
         display: flex;
@@ -92,13 +90,28 @@
 <div id="modalOpciones" class="modal">
     <div class="modal-contenido">
         <h3>¿Cómo deseas recibir tu pedido?</h3>
-        <button class="btn-recoger" onclick="recogerEnTienda()">Recoger en tienda</button>
-        <button class="btn-delivery" onclick="delivery()">Delivery</button>
-        <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-recoger" onclick="mostrarModalDireccion()">
+            <i class="fas fa-store"></i> Recoger en tienda
+        </button>
+        <button class="btn-delivery" onclick="delivery()">
+            <i class="fas fa-motorcycle"></i> Delivery
+        </button>
+        <button class="btn-cancelar" onclick="cerrarModal()">
+            <i class="fas fa-times"></i> Cancelar
+        </button>
     </div>
-
 </div>
 
+<!-- Segundo Modal: Dirección de recogida -->
+<div id="modalDireccion" class="modal">
+    <div class="modal-contenido">
+        <h3><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> Dirección de recogida</h3>
+        <p>Cal. Pérez Figuerola 265 - A media cuadra de Plaza de Pisco</p>
+        <p>¿Desea continuar con el pago?</p>
+        <button onclick="continuarConPago()">Continuar con el Pago</button>
+        <button onclick="cerrarModalDireccion()">Cerrar</button>
+    </div>
+</div>
 
 <div th:replace="componentes/footer :: footer-general"></div>
 <script th:src="@{/js/delivery.js}"></script>

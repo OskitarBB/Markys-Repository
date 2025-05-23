@@ -8,11 +8,12 @@
 }
 
 .modal-contenido {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
-  width: 80%;
-  max-width: 400px;
-  margin: 15% auto;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -49,4 +50,27 @@
 .btn-cancelar {
   background-color: #dc3545; /* Rojo */
   color: white;
+}
+.info-recoger {
+  background: #f8f9fa;
+  padding: 20px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  max-width: 500px;
+  text-align: center;
+}
+
+.btn-pagar {
+  background-color: #007bff; /* Azul mercado pago */
+  color: white;
+  padding: 10px 20px;
+  margin-top: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-pagar:hover {
+  opacity: 0.85;
 }
