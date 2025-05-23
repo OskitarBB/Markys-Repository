@@ -43,14 +43,34 @@ function ready(){
 
 // Eliminamos todos los elementos del carrito y lo ocultamos
 function pagarClicked(){
-    alert("Gracias por la compra");
+    document.getElementById("modalOpciones").style.display = "block";
+}
+
+function cerrarModal(){
+    document.getElementById("modalOpciones").style.display = "none";
+}
+
+function recogerEnTienda(){
+    cerrarModal();
+    alert("¡Gracias por tu compra! Puedes recoger tu pedido en tienda.");
+    vaciarCarrito();
+}
+
+function delivery(){
+    cerrarModal();
+    alert("Lo sentimos, aún no contamos con servicio de delivery.");
+    // Si luego decides implementarlo, aquí podrías abrir otro modal/formulario.
+}
+
+function vaciarCarrito() {
     var carritoItems = document.getElementsByClassName('carrito-items')[0];
-    while (carritoItems.hasChildNodes()){
+    while (carritoItems.hasChildNodes()) {
         carritoItems.removeChild(carritoItems.firstChild)
     }
     actualizarTotalCarrito();
     ocultarCarrito();
 }
+
 
 // Función que controla el boton clickeado de agregar al carrito
 function agregarAlCarritoClicked(event){
@@ -95,8 +115,6 @@ function filtrarDelivery() {
 
     mensaje.style.display = hayCoincidencias ? "none" : "block";
 }
-
-
 
 // Función que agrega un item al carrito
 function agregarItemAlCarrito(titulo, precio, imagenSrc){

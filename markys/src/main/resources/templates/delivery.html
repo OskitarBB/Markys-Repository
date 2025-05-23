@@ -9,12 +9,15 @@
     <!-- CSS local -->
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
     <link rel="stylesheet" th:href="@{/css/carrito.css}">
-    <title>Marky's | Delivery</title>
+    <link rel="stylesheet" th:href="@{/css/modalpago.css}">
+    <title>Marky's | Pide Online</title>
 </head>
 <body>
 <header>
     <h1>Pida nuestros deliciosos pollos a la brasa</h1>
 </header>
+<h2>Recuerde recoger su pedido en:</h2>
+<h3>7QMV+664, Las Americas, Pisco 11601</h3>
 <div style="display: flex; justify-content: flex-start; align-items: center; margin: 1rem 0;">
     <form onsubmit="event.preventDefault(); filtrarDelivery();" style="
         display: flex;
@@ -85,6 +88,17 @@
         </div>
     </div>
 </section>
+<!-- Modal de opciones -->
+<div id="modalOpciones" class="modal">
+    <div class="modal-contenido">
+        <h3>¿Cómo deseas recibir tu pedido?</h3>
+        <button class="btn-recoger" onclick="recogerEnTienda()">Recoger en tienda</button>
+        <button class="btn-delivery" onclick="delivery()">Delivery</button>
+        <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+    </div>
+
+</div>
+
 
 <div th:replace="componentes/footer :: footer-general"></div>
 <script th:src="@{/js/delivery.js}"></script>
