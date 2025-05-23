@@ -65,7 +65,7 @@
   <!-- Contenedor de platillos -->
   <div class="platillo-container">
     <div th:each="platillo : ${platillos}" class="platillo-card">
-      <img th:src="@{/platimg/{nombre}(nombre=${platillo.imagen})}" alt="Imagen" class="platillo-imagen">
+      <img th:src="@{/img/{nombre}(nombre=${platillo.imagen})}" alt="Imagen" class="platillo-imagen">
       <h3 th:text="${platillo.nombre}"></h3>
       <p th:text="${platillo.descripcion}"></p>
       <p th:text="'Precio: S/ ' + ${platillo.precio}"></p>

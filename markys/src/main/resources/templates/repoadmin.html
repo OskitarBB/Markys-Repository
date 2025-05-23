@@ -331,7 +331,7 @@
                 <td th:text="${platillo.precio}">S/ 0.00</td>
                 <td th:text="${platillo.estado}">DISPONIBLE</td>
                 <td>
-                    <img th:src="@{/platimg/{nombre}(nombre=${platillo.imagen})}" alt="Imagen" style="width: 100px; border-radius: 5px;">
+                    <img th:src="@{/img/{nombre}(nombre=${platillo.imagen})}" alt="Imagen" style="width: 100px; border-radius: 5px;">
                 </td>
                 <td>
                     <button class="btn-accion"

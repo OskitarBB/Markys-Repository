@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/carta", "/registro", "/contacto",
-                                "/login", "/loginadmin", "/registroadmin", "/platillos/**", "/platimg/**",
+                                "/login", "/loginadmin", "/registroadmin", "/platillos/**",
                                 "/inicio", "/css/**", "/img/**"
                         ).permitAll()
                         .requestMatchers("/repoadmin", "/admin/**").hasRole("ADMIN")
