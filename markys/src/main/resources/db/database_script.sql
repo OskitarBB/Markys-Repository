@@ -81,3 +81,8 @@ CREATE TABLE detalle_pedido (
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
     FOREIGN KEY (platillo_id) REFERENCES platillos(id) ON DELETE CASCADE
 );
+
+--Tabla alterada PEDIDOS
+ALTER TABLE pedidos
+ADD metodo_entrega VARCHAR(20) NOT NULL,
+ADD direccion_entrega VARCHAR(255);
