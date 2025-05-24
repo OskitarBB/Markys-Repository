@@ -176,7 +176,7 @@
         }
 
         function filtrarPorRol() {
-            const rolSeleccionado = document.getElementById("rolFiltro").value;
+            const rolSeleccionado = document.getElementById("usuario_rolFiltro").value;
             const rows = Array.from(document.getElementById("tablaUsuarios").rows).slice(1);
             rows.forEach(row => {
                 const rolCell = row.cells[6].textContent.trim();
@@ -185,8 +185,8 @@
         }
 
         function actualizarImagenRolNuevo() {
-            const rol = document.getElementById("rolNuevo").value;
-            const img = document.getElementById("imagenRolNuevo");
+            const rol = document.getElementById("usuario_rolNuevo").value;
+            const img = document.getElementById("usuario_imagenRolNuevo");
             if (rol === "ADMIN") {
                 img.src = "/img/Gallina_fina.png";
                 img.alt = "Gallina Admin";
@@ -197,7 +197,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            const selectRol = document.getElementById("rolNuevo");
+            const selectRol = document.getElementById("usuario_rolNuevo");
             if (selectRol) {
                 selectRol.addEventListener("change", actualizarImagenRolNuevo);
                 actualizarImagenRolNuevo(); // Inicial

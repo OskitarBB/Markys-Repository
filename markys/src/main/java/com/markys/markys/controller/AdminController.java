@@ -111,6 +111,19 @@ public class AdminController {
         return usuarioRepository.findById(id).orElse(null);
     }
 
+    // Vista de edición de usuario (opcional, si no usas modal)
+    @GetMapping("/admin/usuarios/{id}/editar")
+    public String mostrarFormularioEditarUsuario(@PathVariable Long id, Model model) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            model.addAttribute("usuario", usuarioOpt.get());
+            model.addAttribute("roles", rolRepository.findAll());
+            return "editarUsuario";
+        } else {
+            return "redirect:/admin/usuarios?seccion=usuarios&error=notfound";
+        }
+    }
+
     // Actualizar usuario desde modal
     @PostMapping("/admin/usuarios/actualizar")
     public String actualizarUsuarioDesdeModal(@RequestParam Long id, @RequestParam String username,
@@ -139,6 +152,22 @@ public class AdminController {
 
             usuarioRepository.save(usuario);
         }
+        return "redirect:/admin/usuarios?seccion=usuarios";
+    }
+    @GetMapping("/admin/usuarios/{id}/eliminar")
+    public String confirmarEliminacion(@PathVariable Long id, Model model) {
+        // Buscar usuario por id
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            model.addAttribute("usuario", usuarioOpt.get());
+            return "confirmarEliminacion"; // Nombre del archivo HTML sin extensión
+        } else {
+            return "redirect:/admin/usuarios?seccion=usuarios&error=notfound";
+        }
+    }
+    @PostMapping("/admin/usuarios/{id}/eliminar")
+    public String eliminarUsuario(@PathVariable Long id) {
+        usuarioRepository.deleteById(id);
         return "redirect:/admin/usuarios?seccion=usuarios";
     }
 
@@ -170,7 +199,6 @@ public class AdminController {
                 Path rutaArchivo = Paths.get(carpetaDestino + nombreArchivo);
                 Files.createDirectories(rutaArchivo.getParent());
                 imagenFile.transferTo(rutaArchivo);
-                // Guardar ruta relativa para acceder desde HTML
                 platillo.setImagen("/platimg/" + nombreArchivo);
             } catch (IOException e) {
                 e.printStackTrace();
