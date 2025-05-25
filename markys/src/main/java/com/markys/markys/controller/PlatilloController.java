@@ -95,7 +95,8 @@ public class PlatilloController {
         return "redirect:/admin/usuarios?seccion=platillos";
     }
 
-    // NUEVO: Método POST para eliminar platillo
+    // NUEVO: Metodo POST para eliminar platillo
+
     @PostMapping("/{id}/eliminar")
     public String eliminarPlatillo(@PathVariable Long id) {
         platilloRepository.deleteById(id);
