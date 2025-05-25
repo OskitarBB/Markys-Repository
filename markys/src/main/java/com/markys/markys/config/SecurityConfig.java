@@ -39,12 +39,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")
-                        .successHandler(successHandler)
+                        .loginPage("/login")                  // Página personalizada de login
+                        .loginProcessingUrl("/login")         // URL que procesa el POST del login
+                        .successHandler(successHandler)       // Redirección dinámica por rol
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/")                // Redirige al home al hacer logout
                         .permitAll()
                 );
 
