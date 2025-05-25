@@ -1,0 +1,91 @@
+:root {
+  --main-green: #127f0b;
+  --hover-green: #0e6a08;
+  --light-bg: rgba(255, 255, 255, 0.1);
+}
+
+.navbar {
+  background-color: var(--main-green) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  color: white !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  position: relative;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+
+.nav-link.btn-hover-effect:hover {
+  background-color: var(--hover-green);
+  transform: translateY(-2px);
+}
+
+.nav-link.active {
+  font-weight: 600;
+  background-color: var(--light-bg);
+}
+
+/* Estilos para el área de usuario */
+.btn-user, .btn-login {
+  color: white;
+  background-color: var(--hover-green);
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-user:hover, .btn-login:hover {
+  background-color: #0a5206;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.dropdown-header {
+  font-weight: 600;
+  color: var(--main-green);
+}
+
+.dropdown-item {
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: var(--main-green);
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    margin: 1rem 0;
+  }
+
+  .nav-link {
+    margin: 0.25rem 0;
+  }
+
+  .btn-user, .btn-login {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+}
