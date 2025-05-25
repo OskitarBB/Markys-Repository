@@ -8,11 +8,16 @@
     <a th:href="@{/contacto}">Contactos</a>
     <a th:href="@{/delivery}">¡Pide Online!</a>
 
-    <!-- Mostrar links según estado de autenticación -->
-    <a th:if="${#authentication != null and #authentication.principal != null}" th:href="@{/logout}">Cerrar Sesión</a>
-    <a th:if="${#authentication == null or #authentication.principal == null}" th:href="@{/login}">Iniciar Sesión</a>
-
+    <!-- Verificación mejorada -->
+    <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Cerrar Sesión</a>
+    <a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Iniciar Sesión</a>
   </nav>
+
+  <div th:if="${#authentication}">
+    <p>Usuario: [[${#authentication.name}]]</p>
+    <p>Principal: [[${#authentication.principal}]]</p>
+    <p>Autenticado: [[${#authorization.expression('isAuthenticated()')}]]</p>
+  </div>
 </div>
 </body>
 </html>
