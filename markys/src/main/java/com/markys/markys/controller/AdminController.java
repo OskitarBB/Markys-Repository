@@ -125,11 +125,15 @@ public class AdminController {
     }
 
     // Actualizar usuario desde modal
-    @PostMapping("/admin/usuarios/actualizar")
-    public String actualizarUsuarioDesdeModal(@RequestParam Long id, @RequestParam String username,
-                                              @RequestParam(required = false) String password,
-                                              @RequestParam String nombre, @RequestParam String apellido,
-                                              @RequestParam String correo, @RequestParam String rol) {
+    @PostMapping("/admin/usuarios/{id}/editar")
+    public String actualizarUsuarioDesdeFormulario(
+            @PathVariable Long id,
+            @RequestParam String username,
+            @RequestParam(required = false) String password,
+            @RequestParam String nombre,
+            @RequestParam String apellido,
+            @RequestParam String correo,
+            @RequestParam String rol) {
 
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isPresent()) {
@@ -152,8 +156,10 @@ public class AdminController {
 
             usuarioRepository.save(usuario);
         }
+
         return "redirect:/admin/usuarios?seccion=usuarios";
     }
+
     @GetMapping("/admin/usuarios/{id}/eliminar")
     public String confirmarEliminacion(@PathVariable Long id, Model model) {
         // Buscar usuario por id
