@@ -17,7 +17,7 @@ import java.util.List;
 public class PagoController {
 
     public PagoController() {
-        MercadoPagoConfig.setAccessToken("TU_ACCESS_TOKEN"); // Cambiar esto por el token real
+        MercadoPagoConfig.setAccessToken("TEST-4576544660445831-052321-d709a64c82963f3a7230191e6d3803a9-2451613409"); // Token de mercadoPago
     }
 
     @PostMapping("/crear-preferencia")

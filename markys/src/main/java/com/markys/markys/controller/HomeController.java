@@ -60,12 +60,6 @@ public class HomeController {
         return "contacto";
     }
 
-    /*
-    @GetMapping("/delivery")
-    public String delivery() {
-        return "delivery";
-    }
-    */
 
     @GetMapping("/delivery")
     public String mostrarDelivery(Model model) {
@@ -107,5 +101,21 @@ public class HomeController {
         }
 
         return "redirect:/login";
+    }
+
+    //Rutas post-pago
+    @GetMapping("/success")
+    public String pagoExitoso() {
+        return "success";
+    }
+
+    @GetMapping("/failure")
+    public String pagoFallido() {
+        return "failure";
+    }
+
+    @GetMapping("/pending")
+    public String pagoPendiente() {
+        return "pending";
     }
 }
