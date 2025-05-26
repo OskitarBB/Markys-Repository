@@ -26,7 +26,7 @@
 </header>
 <div th:replace="componentes/fragments/navbar :: barra-navegacion"></div>
 
-<div style="position: absolute; top: 380px; left: 20px;">
+<div class="barra-busqueda">
     <form onsubmit="event.preventDefault(); filtrarDelivery();" style="
         display: flex;
         align-items: center;
@@ -71,6 +71,9 @@
         <div th:each="platillo : ${platillos}" class="item producto-delivery">
             <span class="titulo-item nombre-producto" th:text="${platillo.nombre}">Nombre</span>
             <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Platillo" class="img-item">
+            <p class="descripcion-item" th:text="${platillo.descripcion}">
+                Descripción del platillo
+            </p>
             <span class="precio-item" th:text="'S/. ' + ${platillo.precio}">S/.00.00</span>
             <button class="boton-item">Agregar al Carrito</button>
         </div>
