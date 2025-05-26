@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
@@ -14,6 +15,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Transactional
     public Usuario crearUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
@@ -26,6 +28,7 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
+    @Transactional
     public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
             usuario.setUsername(usuarioActualizado.getUsername());
@@ -38,6 +41,7 @@ public class UsuarioService {
         }).orElse(null);
     }
 
+    @Transactional
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }

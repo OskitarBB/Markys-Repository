@@ -143,7 +143,7 @@ function agregarItemAlCarrito(titulo, precio, imagenSrc){
 function sumarCantidad(event){
     var buttonClicked = event.target;
     var selector = buttonClicked.parentElement;
-    var cantidadActual = selector.getElementsByClassName('carrito-item-cantidad')[0].value;
+    let cantidadActual = parseInt(selector.getElementsByClassName('carrito-item-cantidad')[0].value);
     cantidadActual++;
     selector.getElementsByClassName('carrito-item-cantidad')[0].value = cantidadActual;
     actualizarTotalCarrito();
@@ -240,15 +240,61 @@ function cerrarModalDireccion() {
     document.getElementById("modalDireccion").style.display = "none";
 }
 
+//Después de continuar con el pago en Recojo
 function continuarConPago() {
-    cerrarModalDireccion();
-    vaciarCarrito();
-    // Aquí luego pondrás tu integración con Mercado Pago
-    window.location.href = "https://www.youtube.com/watch?v=IQu-BqiZF2M"; // ruta provisional
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+        fetch('/api/pago', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productos: carrito })
+        })
+        .then(response => response.text())
+        .then(urlMercadoPago => {
+            localStorage.removeItem('carrito'); // limpia el carrito si quieres
+            window.location.href = urlMercadoPago;
+        })
+        .catch(error => {
+            console.error("Error al iniciar el pago:", error);
+            alert("Ocurrió un error al redirigir al pago.");
+        });
 }
 
 function delivery() {
     cerrarModal();
     alert("Lo sentimos, aún no contamos con servicio de delivery.");
+}
+//CAMBIOS A PARTIR DE ACÁ
+//Guardar carrito
+function guardarCarritoEnLocalStorage() {
+    const carritoItems = document.getElementsByClassName('carrito-item');
+    const carrito = [];
+
+    for (let item of carritoItems) {
+        const nombre = item.getElementsByClassName('carrito-item-titulo')[0].innerText;
+        let precioTexto = item.getElementsByClassName('carrito-item-precio')[0].innerText;
+        let precio = parseFloat(precioTexto.replace(/[^\d.]/g, '')); // Convertir a número
+        const imagen = item.getElementsByTagName('img')[0].src;
+        const cantidad = parseInt(item.getElementsByClassName('carrito-item-cantidad')[0].value);
+
+        carrito.push({ nombre, precio, imagen, cantidad });
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+//Cargar Carrito
+function cargarCarritoDesdeLocalStorage() {
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    for (const item of carrito) {
+        agregarItemAlCarrito(item.titulo, item.precio, item.imagen);
+        // Luego cambia la cantidad a la guardada
+        const carritoItems = document.getElementsByClassName('carrito-item');
+        const ultimo = carritoItems[carritoItems.length - 1];
+        ultimo.getElementsByClassName('carrito-item-cantidad')[0].value = item.cantidad;
+    }
+    actualizarTotalCarrito();
 }
 
