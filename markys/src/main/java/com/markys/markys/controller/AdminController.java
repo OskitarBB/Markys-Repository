@@ -200,12 +200,12 @@ public class AdminController {
 
         if (!imagenFile.isEmpty()) {
             try {
-                String carpetaDestino = "src/main/resources/static/platimg/";
+                String carpetaDestino = "src/main/resources/static/img/";
                 String nombreArchivo = System.currentTimeMillis() + "_" + imagenFile.getOriginalFilename();
                 Path rutaArchivo = Paths.get(carpetaDestino + nombreArchivo);
                 Files.createDirectories(rutaArchivo.getParent());
                 imagenFile.transferTo(rutaArchivo);
-                platillo.setImagen("/platimg/" + nombreArchivo);
+                platillo.setImagen("/img/" + nombreArchivo);
             } catch (IOException e) {
                 e.printStackTrace();
                 return "redirect:/admin/usuarios?seccion=platillos&error=imagen";

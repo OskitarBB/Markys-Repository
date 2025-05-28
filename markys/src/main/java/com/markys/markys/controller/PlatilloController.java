@@ -31,7 +31,7 @@ public class PlatilloController {
     ) {
         try {
             String nombreArchivo = StringUtils.cleanPath(imagenFile.getOriginalFilename());
-            String uploadDir = "src/main/resources/static/platimg/";
+            String uploadDir = "src/main/resources/static/img/";
             Path rutaArchivo = Paths.get(uploadDir + nombreArchivo);
             Files.copy(imagenFile.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
 
@@ -80,7 +80,7 @@ public class PlatilloController {
             if (imagenFile != null && !imagenFile.isEmpty()) {
                 try {
                     String nombreArchivo = StringUtils.cleanPath(imagenFile.getOriginalFilename());
-                    String uploadDir = "src/main/resources/static/platimg/";
+                    String uploadDir = "src/main/resources/static/img/";
                     Path rutaArchivo = Paths.get(uploadDir + nombreArchivo);
                     Files.copy(imagenFile.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
                     platillo.setImagen(nombreArchivo);
