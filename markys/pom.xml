@@ -91,6 +91,7 @@
 				<configuration>
 					<source>${java.version}</source> <!-- Usa la propiedad java.version -->
 					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>
