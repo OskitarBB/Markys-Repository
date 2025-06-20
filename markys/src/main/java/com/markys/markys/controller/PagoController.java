@@ -19,19 +19,15 @@ import java.util.List;
 public class PagoController {
 
     public PagoController() {
-        MercadoPagoConfig.setAccessToken("TEST-4576544660445831-052321-d709a64c82963f3a7230191e6d3803a9-2451613409"); // Token de mercadoPago
+        MercadoPagoConfig.setAccessToken("APP_USR-6246925132439479-062001-5f12cdc1c38747034ed29c6ef1a49f1f-2509538210"); // Token de mercadoPago
     }
 
     @PostMapping("/preferencia")
-    public ResponseEntity<String> crearPreferencia(@RequestBody CarritoRequest carrito)
+    public ResponseEntity<?> crearPreferencia(@RequestBody CarritoRequest carrito)
             throws MPException, MPApiException {
         System.out.println("[DEBUG] JSON recibido en preferencia: " + carrito);
         if (carrito == null || carrito.getProductos() == null) {
             return ResponseEntity.badRequest().body("Error: Carrito vacío o productos no enviados");
-        }
-        // Verificar si los productos tienen valores correctos
-        for (CarritoItemDTO item : carrito.getProductos()) {
-            System.out.println("[DEBUG] Producto recibido: " + item.getNombre() + " - Cantidad: " + item.getCantidad() + " - Precio: " + item.getPrecio());
         }
         /*
         //Prueba para la pasarela
@@ -45,7 +41,6 @@ public class PagoController {
         );
 
          */
-
         List<PreferenceItemRequest> items = carrito.getProductos().stream()
                 .filter(p -> p.getNombre() != null && p.getPrecio() != null)
                 .map(p ->
@@ -66,13 +61,14 @@ public class PagoController {
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
                 .backUrls(backUrls)
-                //.autoReturn("approved") //Descomentar cuando se use URL pública
+                //.autoReturn("approved")
                 .build();
 
         try {
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
-            return ResponseEntity.ok(preference.getInitPoint());
+            // Retornamos el ID de preferencia en formato JSON para usarlo en el frontend
+            return ResponseEntity.ok("{\"preferenceId\": \"" + preference.getId() + "\"}");
         } catch (MPApiException apiEx) {
             System.out.println("[ERROR] MercadoPago API error:");
             System.out.println("Status Code: " + apiEx.getStatusCode());
@@ -84,7 +80,5 @@ public class PagoController {
             return ResponseEntity.status(500)
                     .body("Error general de MercadoPago: " + ex.getMessage());
         }
-
-
     }
 }

@@ -259,30 +259,50 @@ function cerrarModalDireccion() {
 function continuarConPago() {
     const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
 
-    // Creamos una copia del carrito sin el campo 'imagen'
+    // Preparamos el carrito sin información innecesaria
     const carritoSinImagen = carritoGuardado.map(({ nombre, precio, cantidad }) => ({
-        nombre,
-        precio,
-        cantidad
+        nombre, precio, cantidad
     }));
+
     console.log("[DEBUG] JSON enviado:", JSON.stringify({ productos: carritoSinImagen }));
+
     fetch('/api/pago/preferencia', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ productos: carritoSinImagen }) // enviamos solo lo necesario
+        body: JSON.stringify({ productos: carritoSinImagen })
     })
-    .then(response => response.text())
-    .then(urlMercadoPago => {
-        localStorage.removeItem('carrito'); // limpia el carrito
-        window.location.href = urlMercadoPago;
+    // Convertimos la respuesta a JSON
+    .then(response => response.json())
+    .then(data => {
+        // Obtenemos el ID de la preferencia
+        const preferenceId = data.preferenceId;
+
+
+        // Inicializamos MercadoPago con tu public key
+        const mp = new MercadoPago('APP_USR-37e01aa5-6862-429d-b13c-b456f59f7cff', { //Acá irá la Public Key del vendedor
+            locale: 'es-PE'
+        });
+
+        // Limpiamos el contenedor para evitar acumulación de botones
+                document.getElementById("mercadopago-button").innerHTML = "";
+
+        // Renderizamos el Checkout Pro embebido en el contenedor "mercadopago-button"
+        mp.checkout({
+            preference: {
+                id: preferenceId
+            },
+            render: {
+                container: '#mercadopago-button', // ID del contenedor donde se mostrará el botón
+                label: 'Pagar con Mercado Pago',   // Texto customizable para el botón
+            }
+        });
     })
     .catch(error => {
         console.error("Error al iniciar el pago:", error);
         alert("Ocurrió un error al redirigir al pago.");
     });
-
 }
 
 function delivery() {
@@ -298,7 +318,7 @@ function guardarCarritoEnLocalStorage() {
     for (let item of carritoItems) {
         const nombre = item.getElementsByClassName('carrito-item-nombre')[0].innerText;
         let precioTexto = item.getElementsByClassName('carrito-item-precio')[0].innerText;
-        let precio = parseFloat(precioTexto.replace(/[^\d.]/g, '')); // Convertir a número
+        let precio = parsePrecio(precioTexto);
         const imagen = item.getElementsByTagName('img')[0].src;
         const cantidad = parseInt(item.getElementsByClassName('carrito-item-cantidad')[0].value);
 
