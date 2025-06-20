@@ -49,6 +49,7 @@ function vaciarCarrito() {
     }
     actualizarTotalCarrito();
     ocultarCarrito();
+    localStorage.removeItem('carrito');
 }
 
 
@@ -56,11 +57,11 @@ function vaciarCarrito() {
 function agregarAlCarritoClicked(event){
     var button = event.target;
     var item = button.parentElement;
-    var titulo = item.getElementsByClassName('titulo-item')[0].innerText;
+    var nombre = item.getElementsByClassName('nombre-item')[0].innerText;
     var precio = item.getElementsByClassName('precio-item')[0].innerText;
     var imagenSrc = item.getElementsByClassName('img-item')[0].src;
 
-    agregarItemAlCarrito(titulo, precio, imagenSrc);
+    agregarItemAlCarrito(nombre, precio, imagenSrc);
     hacerVisibleCarrito();
 }
 
@@ -97,15 +98,15 @@ function filtrarDelivery() {
 }
 
 // Función que agrega un item al carrito
-function agregarItemAlCarrito(titulo, precio, imagenSrc){
+function agregarItemAlCarrito(nombre, precio, imagenSrc){
     var item = document.createElement('div');
     item.classList.add('item');
     var itemsCarrito = document.getElementsByClassName('carrito-items')[0];
 
     // Controlamos que el item no se encuentre ya en el carrito
-    var nombresItemsCarrito = itemsCarrito.getElementsByClassName('carrito-item-titulo');
+    var nombresItemsCarrito = itemsCarrito.getElementsByClassName('carrito-item-nombre');
     for(var i=0;i < nombresItemsCarrito.length;i++){
-        if(nombresItemsCarrito[i].innerText==titulo){
+        if(nombresItemsCarrito[i].innerText==nombre){
             alert("El item ya se encuentra en el carrito");
             return;
         }
@@ -115,7 +116,7 @@ function agregarItemAlCarrito(titulo, precio, imagenSrc){
         <div class="carrito-item">
             <img src="${imagenSrc}" width="80px" alt="">
             <div class="carrito-item-detalles">
-                <span class="carrito-item-titulo">${titulo}</span>
+                <span class="carrito-item-nombre">${nombre}</span>
                 <div class="selector-cantidad">
                     <i class="fa-solid fa-minus restar-cantidad"></i>
                     <input type="text" value="1" class="carrito-item-cantidad" disabled>
@@ -132,41 +133,55 @@ function agregarItemAlCarrito(titulo, precio, imagenSrc){
     itemsCarrito.append(item);
 
     // Agregamos funcionalidades al nuevo item
-    item.getElementsByClassName('btn-eliminar')[0].addEventListener('click', eliminarItemCarrito);
-    item.getElementsByClassName('restar-cantidad')[0].addEventListener('click',restarCantidad);
-    item.getElementsByClassName('sumar-cantidad')[0].addEventListener('click',sumarCantidad);
+    item.getElementsByClassName('btn-eliminar')[0].addEventListener('click', function(event) {
+            eliminarItemCarrito(event);
+            guardarCarritoEnLocalStorage();
+        });
+        item.getElementsByClassName('restar-cantidad')[0].addEventListener('click', function(event) {
+            restarCantidad(event);
+            guardarCarritoEnLocalStorage();
+        });
+        item.getElementsByClassName('sumar-cantidad')[0].addEventListener('click', function(event) {
+            sumarCantidad(event);
+            guardarCarritoEnLocalStorage();
+        });
 
-    actualizarTotalCarrito();
+        actualizarTotalCarrito();
+        guardarCarritoEnLocalStorage();
+
 }
 
 // Aumento en uno la cantidad del elemento seleccionado
-function sumarCantidad(event){
+function sumarCantidad(event) {
     var buttonClicked = event.target;
     var selector = buttonClicked.parentElement;
     let cantidadActual = parseInt(selector.getElementsByClassName('carrito-item-cantidad')[0].value);
     cantidadActual++;
     selector.getElementsByClassName('carrito-item-cantidad')[0].value = cantidadActual;
     actualizarTotalCarrito();
+    guardarCarritoEnLocalStorage();
 }
 
 // Resto en uno la cantidad del elemento seleccionado
-function restarCantidad(event){
+function restarCantidad(event) {
     var buttonClicked = event.target;
     var selector = buttonClicked.parentElement;
-    var cantidadActual = selector.getElementsByClassName('carrito-item-cantidad')[0].value;
+    var cantidadActual = parseInt(selector.getElementsByClassName('carrito-item-cantidad')[0].value);
     cantidadActual--;
-    if(cantidadActual>=1){
+    if (cantidadActual >= 1) {
         selector.getElementsByClassName('carrito-item-cantidad')[0].value = cantidadActual;
         actualizarTotalCarrito();
+        guardarCarritoEnLocalStorage();
     }
 }
 
 // Elimino el item seleccionado del carrito
-function eliminarItemCarrito(event){
+function eliminarItemCarrito(event) {
     var buttonClicked = event.target;
     buttonClicked.parentElement.parentElement.remove();
     actualizarTotalCarrito();
     ocultarCarrito();
+    guardarCarritoEnLocalStorage();
 }
 
 // Función que controla si hay elementos en el carrito
@@ -242,24 +257,32 @@ function cerrarModalDireccion() {
 
 //Después de continuar con el pago en Recojo
 function continuarConPago() {
-    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
 
-        fetch('/api/pago', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ productos: carrito })
-        })
-        .then(response => response.text())
-        .then(urlMercadoPago => {
-            localStorage.removeItem('carrito'); // limpia el carrito si quieres
-            window.location.href = urlMercadoPago;
-        })
-        .catch(error => {
-            console.error("Error al iniciar el pago:", error);
-            alert("Ocurrió un error al redirigir al pago.");
-        });
+    // Creamos una copia del carrito sin el campo 'imagen'
+    const carritoSinImagen = carritoGuardado.map(({ nombre, precio, cantidad }) => ({
+        nombre,
+        precio,
+        cantidad
+    }));
+    console.log("[DEBUG] JSON enviado:", JSON.stringify({ productos: carritoSinImagen }));
+    fetch('/api/pago/preferencia', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productos: carritoSinImagen }) // enviamos solo lo necesario
+    })
+    .then(response => response.text())
+    .then(urlMercadoPago => {
+        localStorage.removeItem('carrito'); // limpia el carrito
+        window.location.href = urlMercadoPago;
+    })
+    .catch(error => {
+        console.error("Error al iniciar el pago:", error);
+        alert("Ocurrió un error al redirigir al pago.");
+    });
+
 }
 
 function delivery() {
@@ -273,13 +296,13 @@ function guardarCarritoEnLocalStorage() {
     const carrito = [];
 
     for (let item of carritoItems) {
-        const nombre = item.getElementsByClassName('carrito-item-titulo')[0].innerText;
+        const nombre = item.getElementsByClassName('carrito-item-nombre')[0].innerText;
         let precioTexto = item.getElementsByClassName('carrito-item-precio')[0].innerText;
         let precio = parseFloat(precioTexto.replace(/[^\d.]/g, '')); // Convertir a número
         const imagen = item.getElementsByTagName('img')[0].src;
         const cantidad = parseInt(item.getElementsByClassName('carrito-item-cantidad')[0].value);
 
-        carrito.push({ nombre, precio, imagen, cantidad });
+        carrito.push({ nombre: nombre, precio: precio, imagen: imagen, cantidad: cantidad });
     }
 
     localStorage.setItem('carrito', JSON.stringify(carrito));
@@ -289,7 +312,7 @@ function guardarCarritoEnLocalStorage() {
 function cargarCarritoDesdeLocalStorage() {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     for (const item of carrito) {
-        agregarItemAlCarrito(item.titulo, item.precio, item.imagen);
+        agregarItemAlCarrito(item.nombre, item.precio, item.imagen);
         // Luego cambia la cantidad a la guardada
         const carritoItems = document.getElementsByClassName('carrito-item');
         const ultimo = carritoItems[carritoItems.length - 1];

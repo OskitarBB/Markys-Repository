@@ -69,7 +69,7 @@
     <!-- Contenedor de elementos -->
     <div class="contenedor-items">
         <div th:each="platillo : ${platillos}" class="item producto-delivery">
-            <span class="titulo-item nombre-producto" th:text="${platillo.nombre}">Nombre</span>
+            <span class="nombre-item nombre-producto" th:text="${platillo.nombre}">Nombre</span>
             <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Platillo" class="img-item">
             <p class="descripcion-item" th:text="${platillo.descripcion}">
                 Descripción del platillo
@@ -106,12 +106,15 @@
         <button class="btn-recoger" onclick="mostrarModalDireccion()">
             <i class="fas fa-store"></i> Recoger en tienda
         </button>
+        <!--
         <button class="btn-delivery" onclick="delivery()">
             <i class="fas fa-motorcycle"></i> Delivery
         </button>
+        -->
         <button class="btn-cancelar" onclick="cerrarModal()">
             <i class="fas fa-times"></i> Cancelar
         </button>
+
     </div>
 </div>
 
