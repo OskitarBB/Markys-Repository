@@ -28,6 +28,8 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
+    public Optional<Usuario> obtenerUsuarioPorUsername(String username) {return usuarioRepository.findByUsername(username);}
+
     @Transactional
     public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
@@ -45,4 +47,6 @@ public class UsuarioService {
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
+
+
 }

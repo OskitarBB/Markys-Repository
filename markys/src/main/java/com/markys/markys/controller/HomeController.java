@@ -1,7 +1,6 @@
 package com.markys.markys.controller;
 
 import com.markys.markys.model.Platillo;
-import com.markys.markys.model.Rol;
 import com.markys.markys.model.Usuario;
 import com.markys.markys.repository.RolRepository;
 import com.markys.markys.repository.UsuarioRepository;
@@ -13,9 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -102,6 +102,19 @@ public class HomeController {
 
         return "redirect:/login";
     }
+
+    @GetMapping("/edit_profile")
+    public String mostrarEditarPerfil(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Pasar el usuario al modelo para prellenar el formulario
+        model.addAttribute("usuario", usuario);
+        return "edit_profile"; // Nombre de la plantilla Thymeleaf
+    }
+
+
 
     //Rutas post-pago
     @GetMapping("/success")
