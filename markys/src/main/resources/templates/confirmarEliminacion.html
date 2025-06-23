@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmación de Eliminación</title>
+    <title>Confirmación de Retiro</title>
     <style>
         body {
             margin: 0;
@@ -30,13 +30,22 @@
 
         h1 {
             color: #b30000;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+            resize: vertical;
+            margin-bottom: 20px;
         }
 
         .eliminar-container {
@@ -89,14 +98,18 @@
 <body>
 
 <div class="container">
-    <h1>¿Estás seguro de eliminar al usuario con el username: <span th:text="${usuario.username}">Usuario</span>?</h1>
+    <h1>¿Deseas retirar al usuario: <span th:text="${usuario.username}">Usuario</span>?</h1>
 
-    <form action="#" th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id})}" method="post">
+    <form th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id})}" method="post">
+        <label for="comentario">Motivo del retiro:</label>
+        <textarea id="comentario" name="comentario" placeholder="Ej. Despedido por disturbio" required></textarea>
+
         <div class="eliminar-container">
             <img class="gif-alerta" src="https://i.gifer.com/origin/59/592bc2a8ca4f304b7392b967cc5122eb_w200.gif" alt="Alerta">
-            <button type="submit" class="eliminar-btn">Sí, eliminar</button>
+            <button type="submit" class="eliminar-btn">Confirmar Retiro</button>
         </div>
-        <a href="/admin/usuarios" class="cancelar-btn">Cancelar</a>
+
+        <a href="/admin/usuarios?seccion=usuarios" class="cancelar-btn">Cancelar</a>
     </form>
 </div>
 

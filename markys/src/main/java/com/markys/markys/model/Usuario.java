@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="usuarios")
+@Table(name = "usuarios")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,12 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String correo;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoUsuario estado;
+
+    @Column(columnDefinition = "TEXT")
+    private String comentario;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -74,6 +80,22 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public EstadoUsuario getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoUsuario estado) {
+        this.estado = estado;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
     public Set<Rol> getRoles() {
