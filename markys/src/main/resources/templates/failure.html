@@ -1,11 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Pago Fallido</title>
+    <meta charset="UTF-8">
+    <title>Pago Fallido | Marky's</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #fff0f0, #fbe0e0);
+            color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .error-box h1 {
+            font-size: 2rem;
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+
+        .error-box p {
+            font-size: 1.1rem;
+            margin: 15px 0 30px;
+            color: #555;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            background-color: #c0392b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-volver:hover {
+            background-color: #a93226;
+        }
+
+        .pollito-triste {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: grayscale(80%);
+            animation: latido 1.8s ease-in-out infinite;
+        }
+
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+    </style>
 </head>
 <body>
-<h1>¡Ups! Algo salió mal</h1>
-<p>No se pudo procesar tu pago. Inténtalo nuevamente.</p>
-<a th:href="@{/}">Volver al inicio</a>
+<div class="error-box">
+    <img th:src="@{/img/pollo_failure.png}" alt="Pollito triste" class="pollito-triste">
+    <h1>¡Ups! Algo salió mal</h1>
+    <p>No pudimos procesar tu pago. Inténtalo nuevamente o elige otro método.</p>
+    <a th:href="@{/}" class="btn-volver">Volver al inicio</a>
+</div>
 </body>
 </html>

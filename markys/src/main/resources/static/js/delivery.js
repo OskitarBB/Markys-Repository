@@ -39,6 +39,7 @@ function ready(){
 
     // Agregamos funcionalidad al botón comprar
     document.getElementsByClassName('btn-pagar')[0].addEventListener('click',pagarClicked);
+    ocultarCarrito();
 }
 
 // Eliminamos todos los elementos del carrito y lo ocultamos
@@ -63,6 +64,11 @@ function agregarAlCarritoClicked(event){
 
     agregarItemAlCarrito(nombre, precio, imagenSrc);
     hacerVisibleCarrito();
+    //Actualizar el carrito en el localStorage
+    guardarCarritoEnLocalStorage();
+    actualizarTotalCarrito();
+
+
 }
 
 // Función que hace visible el carrito
@@ -106,8 +112,14 @@ function agregarItemAlCarrito(nombre, precio, imagenSrc){
     // Controlamos que el item no se encuentre ya en el carrito
     var nombresItemsCarrito = itemsCarrito.getElementsByClassName('carrito-item-nombre');
     for(var i=0;i < nombresItemsCarrito.length;i++){
-        if(nombresItemsCarrito[i].innerText==nombre){
-            alert("El item ya se encuentra en el carrito");
+        if(nombresItemsCarrito[i].innerText == nombre) {
+            const cantidadInput = nombresItemsCarrito[i]
+                .closest('.carrito-item')
+                .getElementsByClassName('carrito-item-cantidad')[0];
+            cantidadInput.value = parseInt(cantidadInput.value) + 1;
+
+            actualizarTotalCarrito();
+            guardarCarritoEnLocalStorage();
             return;
         }
     }
@@ -153,35 +165,51 @@ function agregarItemAlCarrito(nombre, precio, imagenSrc){
 
 // Aumento en uno la cantidad del elemento seleccionado
 function sumarCantidad(event) {
-    var buttonClicked = event.target;
-    var selector = buttonClicked.parentElement;
-    let cantidadActual = parseInt(selector.getElementsByClassName('carrito-item-cantidad')[0].value);
+    const buttonClicked = event.target;
+    const selector = buttonClicked.closest('.selector-cantidad');
+    const cantidadInput = selector.querySelector('.carrito-item-cantidad');
+
+    let cantidadActual = parseInt(cantidadInput.value);
     cantidadActual++;
-    selector.getElementsByClassName('carrito-item-cantidad')[0].value = cantidadActual;
+    cantidadInput.value = cantidadActual;
+
     actualizarTotalCarrito();
     guardarCarritoEnLocalStorage();
 }
 
 // Resto en uno la cantidad del elemento seleccionado
 function restarCantidad(event) {
-    var buttonClicked = event.target;
-    var selector = buttonClicked.parentElement;
-    var cantidadActual = parseInt(selector.getElementsByClassName('carrito-item-cantidad')[0].value);
-    cantidadActual--;
-    if (cantidadActual >= 1) {
-        selector.getElementsByClassName('carrito-item-cantidad')[0].value = cantidadActual;
-        actualizarTotalCarrito();
-        guardarCarritoEnLocalStorage();
+    const buttonClicked = event.target;
+    const selector = buttonClicked.closest('.selector-cantidad');
+    const cantidadInput = selector.querySelector('.carrito-item-cantidad');
+
+    let cantidadActual = parseInt(cantidadInput.value);
+    if (cantidadActual > 1) {
+        cantidadActual--;
+        cantidadInput.value = cantidadActual;
+    } else {
+        const item = buttonClicked.closest('.carrito-item');
+        item.remove();
     }
+
+    actualizarTotalCarrito();
+    guardarCarritoEnLocalStorage();
 }
 
 // Elimino el item seleccionado del carrito
 function eliminarItemCarrito(event) {
-    var buttonClicked = event.target;
-    buttonClicked.parentElement.parentElement.remove();
+    const buttonClicked = event.target;
+    const item = buttonClicked.closest('.carrito-item');
+    item.remove();
+
     actualizarTotalCarrito();
-    ocultarCarrito();
     guardarCarritoEnLocalStorage();
+
+    // Si ya no hay items, ocultamos el carrito
+    const carritoItems = document.getElementsByClassName('carrito-item');
+    if (carritoItems.length === 0) {
+        ocultarCarrito();
+    }
 }
 
 // Función que controla si hay elementos en el carrito
@@ -257,51 +285,34 @@ function cerrarModalDireccion() {
 
 //Después de continuar con el pago en Recojo
 function continuarConPago() {
-    const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
+    const carritoItems = document.getElementsByClassName('carrito-item');
+    const carritoSinImagen = [];
 
-    // Preparamos el carrito sin información innecesaria
-    const carritoSinImagen = carritoGuardado.map(({ nombre, precio, cantidad }) => ({
-        nombre, precio, cantidad
-    }));
+    for (let item of carritoItems) {
+        const nombre = item.querySelector('.carrito-item-nombre').innerText;
+        const precioTexto = item.querySelector('.carrito-item-precio').innerText;
+        const precio = parsePrecio(precioTexto);
+        const cantidad = parseInt(item.querySelector('.carrito-item-cantidad').value);
 
-    console.log("[DEBUG] JSON enviado:", JSON.stringify({ productos: carritoSinImagen }));
+        carritoSinImagen.push({ nombre, precio, cantidad });
+    }
+
+    console.log("[DEBUG] Carrito visual enviado:", carritoSinImagen);
 
     fetch('/api/pago/preferencia', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productos: carritoSinImagen })
     })
-    // Convertimos la respuesta a JSON
     .then(response => response.json())
     .then(data => {
-        // Obtenemos el ID de la preferencia
-        const preferenceId = data.preferenceId;
-
-
-        // Inicializamos MercadoPago con tu public key
-        const mp = new MercadoPago('APP_USR-37e01aa5-6862-429d-b13c-b456f59f7cff', { //Acá irá la Public Key del vendedor
-            locale: 'es-PE'
-        });
-
-        // Limpiamos el contenedor para evitar acumulación de botones
-                document.getElementById("mercadopago-button").innerHTML = "";
-
-        // Renderizamos el Checkout Pro embebido en el contenedor "mercadopago-button"
-        mp.checkout({
-            preference: {
-                id: preferenceId
-            },
-            render: {
-                container: '#mercadopago-button', // ID del contenedor donde se mostrará el botón
-                label: 'Pagar con Mercado Pago',   // Texto customizable para el botón
-            }
-        });
+        // Redirección directa al checkout de Mercado Pago
+        console.log("Redirigiendo a:", data.init_point);
+        window.location.href = data.init_point;
     })
     .catch(error => {
         console.error("Error al iniciar el pago:", error);
-        alert("Ocurrió un error al redirigir al pago.");
+        alert("No hay productos en el carrito, añada algo primero.");
     });
 }
 
@@ -324,13 +335,16 @@ function guardarCarritoEnLocalStorage() {
 
         carrito.push({ nombre: nombre, precio: precio, imagen: imagen, cantidad: cantidad });
     }
-
     localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
 //Cargar Carrito
 function cargarCarritoDesdeLocalStorage() {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    if (carrito.length === 0) {
+            ocultarCarrito(); // no hay nada, mejor ocultamos ya
+            return;
+        }
     for (const item of carrito) {
         agregarItemAlCarrito(item.nombre, item.precio, item.imagen);
         // Luego cambia la cantidad a la guardada

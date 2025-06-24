@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pago")
@@ -29,28 +31,28 @@ public class PagoController {
         if (carrito == null || carrito.getProductos() == null) {
             return ResponseEntity.badRequest().body("Error: Carrito vacío o productos no enviados");
         }
-        /*
-        //Prueba para la pasarela
-        List<PreferenceItemRequest> items = List.of(
-                PreferenceItemRequest.builder()
-                        .title("Producto de prueba")
-                        .quantity(1)
-                        .unitPrice(BigDecimal.valueOf(10.0))
-                        .currencyId("PEN")
-                        .build()
-        );
 
-         */
         List<PreferenceItemRequest> items = carrito.getProductos().stream()
                 .filter(p -> p.getNombre() != null && p.getPrecio() != null)
-                .map(p ->
-                        PreferenceItemRequest.builder()
-                                .title(p.getNombre())
-                                .quantity(p.getCantidad())
-                                .unitPrice(BigDecimal.valueOf(p.getPrecio().doubleValue()))
-                                .currencyId("PEN")
-                                .build()
-                ).toList();
+                .map(p -> {
+                    System.out.println("[DEBUG] Producto recibido: " + p.getNombre() +
+                            ", cantidad: " + p.getCantidad() +
+                            ", precio: " + p.getPrecio());
+
+                    return PreferenceItemRequest.builder()
+                            .title(p.getNombre())
+                            .quantity(p.getCantidad())
+                            .unitPrice(BigDecimal.valueOf(p.getPrecio().doubleValue()))
+                            .currencyId("PEN")
+                            .build();
+                })
+                .toList();
+        System.out.println("Preferencia generada con:");
+        for (PreferenceItemRequest item : items) {
+            System.out.println("Producto: " + item.getTitle() +
+                    " | Cantidad: " + item.getQuantity() +
+                    " | Precio: " + item.getUnitPrice());
+        }
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                 .success("http://localhost:8080/success")
@@ -66,9 +68,15 @@ public class PagoController {
 
         try {
             PreferenceClient client = new PreferenceClient();
+            System.out.println("[BACKEND] Preferencia completa recibida:");
+            items.forEach(item -> {
+                System.out.println(" - " + item.getTitle() + ", cantidad: " + item.getQuantity() + ", precio: " + item.getUnitPrice());
+            });
             Preference preference = client.create(preferenceRequest);
             // Retornamos el ID de preferencia en formato JSON para usarlo en el frontend
-            return ResponseEntity.ok("{\"preferenceId\": \"" + preference.getId() + "\"}");
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("init_point", preference.getInitPoint());
+            return ResponseEntity.ok(respuesta);
         } catch (MPApiException apiEx) {
             System.out.println("[ERROR] MercadoPago API error:");
             System.out.println("Status Code: " + apiEx.getStatusCode());

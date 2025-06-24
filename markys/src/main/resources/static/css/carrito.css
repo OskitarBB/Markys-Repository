@@ -222,3 +222,59 @@ header h1{
     line-height: 1.4;
     min-height: 40px;
 }
+@media screen and (max-width: 600px) {
+  header {
+    height: auto;
+    padding: 15px 10px;
+    background-position: center;
+    text-align: center;
+  }
+
+  header img {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .bienvenida {
+    font-size: 1.3rem;
+    padding: 10px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .barra-busqueda {
+    padding: 0 15px;
+    margin: 10px auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .barra-busqueda input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .contenedor-items {
+    padding: 0 10px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .carrito {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
+.bienvenida {
+  font-size: 1.3rem;
+  padding: 12px 15px;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+.contenedor-items {
+  padding: 0 15px;
+}

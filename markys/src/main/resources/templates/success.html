@@ -1,11 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Pago Exitoso</title>
+    <meta charset="UTF-8">
+    <title>Compra Exitosa | Marky's</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #f0fff0, #d1f2d1);
+            color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .success-box h1 {
+            font-size: 2rem;
+            color: #127f0b;
+            margin-bottom: 10px;
+        }
+
+        .success-box p {
+            font-size: 1.1rem;
+            margin: 15px 0 30px;
+            color: #444;
+        }
+
+        .btn-inicio {
+            text-decoration: none;
+            background-color: #127f0b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-inicio:hover {
+            background-color: #0e6a08;
+        }
+
+        .checkmark {
+            font-size: 3rem;
+            color: #2ecc71;
+            margin-bottom: 15px;
+        }
+        img.pollito {
+        max-width: 180px;
+        display: block;
+        margin: 0 auto -10px auto;
+        animation: saltar 1.2s ease-in-out infinite;
+        }
+
+        @keyframes saltar {
+        0%   { transform: translateY(0); }
+        30%  { transform: translateY(-12px); }
+        50%  { transform: translateY(0); }
+        70%  { transform: translateY(-6px); }
+        100% { transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-<h1>¡Gracias por tu compra!</h1>
-<p>Tu pago fue procesado exitosamente.</p>
-<a th:href="@{/}">Volver al inicio</a>
+<div class="success-box">
+    <div class="checkmark">
+        <img th:src="@{/img/pollo_success.png}" alt="Pollito feliz" class="pollito">
+
+    </div>
+    <h1>¡Gracias por tu compra!</h1>
+    <p>Tu pedido ha sido recibido y está siendo preparado con amor en Marky’s.</p>
+    <a th:href="@{/}" class="btn-inicio">Volver al inicio</a>
+</div>
 </body>
 </html>
