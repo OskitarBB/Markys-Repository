@@ -6,6 +6,8 @@
     --border-color: #dee2e6;
     --border-radius: 8px;
     --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    --error-color: #dc3545;
+    --success-color: #28a745;
 }
 
 body {
@@ -79,6 +81,21 @@ body {
     box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
 }
 
+.form-control.is-invalid {
+    border-color: var(--error-color);
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
 .btn {
     padding: 0.6rem 1.25rem;
     border-radius: var(--border-radius);
@@ -112,6 +129,16 @@ body {
 .input-group .form-control:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.alert {
+    border-radius: var(--border-radius);
+}
+
+.password-requirements {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
 }
 
 @media (max-width: 768px) {

@@ -17,7 +17,8 @@
                     <div class="account-settings text-center">
                         <div class="user-profile mb-4">
                             <div class="user-avatar mb-3">
-                                <img th:src="@{/img/Gallina_cliente.png}" alt="Foto de perfil" class="rounded-circle shadow">                            </div>
+                                <img th:src="@{/img/Gallina_cliente.png}" alt="Foto de perfil" class="rounded-circle shadow">
+                            </div>
                             <h5 class="user-name mb-1" th:text="${usuario.nombre + ' ' + usuario.apellido}">Nombre Apellido</h5>
                             <h6 class="user-email text-muted" th:text="${usuario.correo}">email@example.com</h6>
                         </div>
@@ -30,8 +31,7 @@
                 <div class="card-body">
                     <h4 class="card-title mb-4">Editar información personal</h4>
 
-                    <!-- Formulario corregido con la acción correcta y campo ID -->
-                    <form th:action="@{/perfil/actualizar}" method="post">
+                    <form th:action="@{/perfil/actualizar}" method="post" id="profileForm">
                         <input type="hidden" name="id" th:value="${usuario.id}">
 
                         <div class="row gutters">
@@ -78,10 +78,15 @@
                                     <label for="newPassword" class="form-label">Nueva contraseña</label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="newPassword" name="newPassword"
-                                               placeholder="Ingresa nueva contraseña">
+                                               placeholder="Escriba la contraseña"
+                                               pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$">
                                         <button class="btn btn-outline-secondary toggle-password" type="button">
                                             <i class="far fa-eye"></i>
                                         </button>
+                                    </div>
+
+                                    <div class="invalid-feedback" id="passwordError">
+                                        La contraseña no cumple con los requisitos de seguridad
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +100,17 @@
                                             <i class="far fa-eye"></i>
                                         </button>
                                     </div>
+                                    <div class="invalid-feedback" id="confirmError">
+                                        Las contraseñas no coinciden
+                                    </div>
                                 </div>
                             </div>
                             <p class="text-muted small">Deja estos campos vacíos si no deseas cambiar la contraseña</p>
                         </div>
+                        <small class="form-text text-muted">
+                            La contraseña debe contener al menos: 8 caracteres, una mayúscula, un número y un carácter especial (@#$%^&+=!)
+                        </small>
+
 
                         <!-- Mensajes de éxito/error -->
                         <div th:if="${success}" class="alert alert-success mt-3" th:text="${success}"></div>
@@ -137,6 +149,77 @@
                 icon.classList.add('fa-eye');
             }
         });
+    });
+
+    // Validación de contraseña en el frontend
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const passwordError = document.getElementById('passwordError');
+        const confirmError = document.getElementById('confirmError');
+
+        let isValid = true;
+
+        // Validar solo si se ingresó una contraseña
+        if (newPassword || confirmPassword) {
+            // Validar formato de contraseña
+            const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/;
+            if (!passwordPattern.test(newPassword)) {
+                document.getElementById('newPassword').classList.add('is-invalid');
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('newPassword').classList.remove('is-invalid');
+                passwordError.style.display = 'none';
+            }
+
+            // Validar coincidencia de contraseñas
+            if (newPassword !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('is-invalid');
+                confirmError.style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('confirmPassword').classList.remove('is-invalid');
+                confirmError.style.display = 'none';
+            }
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            // Desplazarse al primer error
+            const firstError = document.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    // Validación en tiempo real
+    document.getElementById('newPassword').addEventListener('input', function() {
+        if (this.value) {
+            const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/;
+            if (!passwordPattern.test(this.value)) {
+                this.classList.add('is-invalid');
+                document.getElementById('passwordError').style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                document.getElementById('passwordError').style.display = 'none';
+            }
+        } else {
+            this.classList.remove('is-invalid');
+            document.getElementById('passwordError').style.display = 'none';
+        }
+    });
+
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const newPassword = document.getElementById('newPassword').value;
+        if (this.value && newPassword !== this.value) {
+            this.classList.add('is-invalid');
+            document.getElementById('confirmError').style.display = 'block';
+        } else {
+            this.classList.remove('is-invalid');
+            document.getElementById('confirmError').style.display = 'none';
+        }
     });
 </script>
 </body>
