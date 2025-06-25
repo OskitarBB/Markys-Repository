@@ -4,6 +4,7 @@ import com.markys.markys.model.Platillo;
 import com.markys.markys.model.Usuario;
 import com.markys.markys.repository.RolRepository;
 import com.markys.markys.repository.UsuarioRepository;
+import com.markys.markys.model.EstadoUsuario;
 import com.markys.markys.service.RegistroService;
 import com.markys.markys.service.ServicioPlatillo;
 
@@ -93,6 +94,9 @@ public class HomeController {
 
     @PostMapping("/registro")
     public String procesarRegistro(@ModelAttribute Usuario usuario, Model model) {
+        usuario.setEstado(EstadoUsuario.vigente);
+        usuario.setComentario("");    // Deja comentario vacío o lo que prefieras
+
         boolean registrado = registroService.registrarUsuario(usuario);
 
         if (!registrado) {
@@ -102,6 +106,7 @@ public class HomeController {
 
         return "redirect:/login";
     }
+
 
     @GetMapping("/edit_profile")
     public String mostrarEditarPerfil(Model model, Authentication authentication) {
