@@ -31,6 +31,9 @@ public class Platillo {
         this.imagen = imagen;
     }
 
+    public Platillo(Long platilloId) {
+    }
+
     // Agregar getter y setter para id
     public long getId() {
         return id;
