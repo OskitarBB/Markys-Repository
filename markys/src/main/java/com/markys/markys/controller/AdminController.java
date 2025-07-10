@@ -224,13 +224,20 @@ public class AdminController {
             platillo.setPrecio(BigDecimal.valueOf(precio));
             platillo.setEstado(estado.equalsIgnoreCase("DISPONIBLE") ? Estado.DISPONIBLE : Estado.AGOTADO);
 
+            // Validar y guardar imagen
             if (!imagenFile.isEmpty()) {
                 try {
                     String carpetaDestino = "src/main/resources/static/img/";
-                    String nombreArchivo =  imagenFile.getOriginalFilename();
+
+                    // Limpiar el nombre del archivo (quitar espacios o caracteres raros)
+                    String nombreOriginal = imagenFile.getOriginalFilename();
+                    String nombreArchivo = nombreOriginal.replaceAll("\\s+", "_");
+
                     Path rutaArchivo = Paths.get(carpetaDestino + nombreArchivo);
                     Files.createDirectories(rutaArchivo.getParent());
                     imagenFile.transferTo(rutaArchivo);
+
+                    // Guardar solo el nombre del archivo en la base de datos
                     platillo.setImagen(nombreArchivo);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -242,7 +249,8 @@ public class AdminController {
             return "redirect:/admin/usuarios?seccion=platillos";
         }
 
-        // === EDITAR PLATILLO CON POSIBLE CAMBIO DE IMAGEN ===
+
+    // === EDITAR PLATILLO CON POSIBLE CAMBIO DE IMAGEN ===
         @PostMapping("/admin/platillos/editar")
         public String editarPlatillo(@RequestParam("id") Long id,
                                      @RequestParam("nombre") String nombre,
