@@ -30,8 +30,8 @@ public class PlatilloController {
             @RequestParam("imagen") MultipartFile imagenFile
     ) {
         try {
-            String nombreArchivo = StringUtils.cleanPath(imagenFile.getOriginalFilename());
-            String uploadDir = "src/main/resources/static/platimg/";
+            String nombreArchivo = Paths.get(imagenFile.getOriginalFilename()).getFileName().toString();
+            String uploadDir = "src/main/resources/static/img/";
             Path rutaArchivo = Paths.get(uploadDir + nombreArchivo);
             Files.copy(imagenFile.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
 

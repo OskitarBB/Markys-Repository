@@ -226,12 +226,12 @@ public class AdminController {
 
             if (!imagenFile.isEmpty()) {
                 try {
-                    String carpetaDestino = "src/main/resources/static/platimg/";
-                    String nombreArchivo = System.currentTimeMillis() + "_" + imagenFile.getOriginalFilename();
+                    String carpetaDestino = "src/main/resources/static/img/";
+                    String nombreArchivo =  imagenFile.getOriginalFilename();
                     Path rutaArchivo = Paths.get(carpetaDestino + nombreArchivo);
                     Files.createDirectories(rutaArchivo.getParent());
                     imagenFile.transferTo(rutaArchivo);
-                    platillo.setImagen("/platimg/" + nombreArchivo);
+                    platillo.setImagen(nombreArchivo);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return "redirect:/admin/usuarios?seccion=platillos&error=imagen";
@@ -259,7 +259,7 @@ public class AdminController {
                 platillo.setPrecio(BigDecimal.valueOf(precio));
                 platillo.setEstado(estado.equalsIgnoreCase("DISPONIBLE") ? Estado.DISPONIBLE : Estado.AGOTADO);
 
-                if (!imagenFile.isEmpty()) {
+                if (imagenFile != null && !imagenFile.isEmpty()) {
                     try {
                         String carpetaDestino = "src/main/resources/static/img/";
                         String nombreArchivo = imagenFile.getOriginalFilename();

@@ -83,7 +83,7 @@
     <h1>Editar Platillo</h1>
 
     <form th:action="@{/admin/platillos/editar}" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="id" th:value="${platillo.id}"/>
+        <input type="hidden" th:name="id" th:value="${platillo.id}"/>
 
         <div class="form-group">
             <label for="nombre">Nombre:</label>
