@@ -158,6 +158,60 @@
     word-wrap: break-word;
     white-space: pre-wrap;  /* Respeta saltos de línea si hay */
 }
+    /* === Sección de Ventas === */
+.ventas-dashboard {
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 30px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.ventas-dashboard h1,
+.ventas-dashboard h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.ventas-dashboard .subtitle {
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+
+.ventas-dashboard .grafico-container {
+    margin-bottom: 30px;
+}
+
+.ventas-dashboard .tabla-ventas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+.ventas-dashboard .tabla-ventas th,
+.ventas-dashboard .tabla-ventas td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.ventas-dashboard .tabla-ventas th {
+    background-color: #f8f9fa;
+    color: #34495e;
+    font-weight: 600;
+}
+
+.ventas-dashboard .tabla-ventas tr:hover {
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+    .ventas-dashboard {
+        padding: 1rem;
+    }
+}
     </style>
 
     <script>
@@ -455,6 +509,68 @@
             <button type="button" onclick="cerrarModalEliminarPlatillo()">Cancelar</button>
         </form>
     </div>
+</div>
+<div class="ventas-dashboard" th:if="${seccion == 'ventas'}">
+    <h1>Dashboard de Ventas</h1>
+    <h2>Pedidos por Platillo</h2>
+    <p class="subtitle">Visualización gráfica y tabular de los pedidos registrados</p>
+
+    <!-- Gráfico -->
+    <div class="grafico-container">
+        <canvas id="graficoVentas" height="100"></canvas>
+    </div>
+
+    <!-- Tabla -->
+    <table class="tabla-ventas">
+        <thead>
+        <tr>
+            <th>Nombre del Platillo</th>
+            <th>Cantidad de Pedidos</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dato : ${datosPlatillos}">
+            <td th:text="${dato[0]}">Platillo</td>
+            <td th:text="${dato[1]}">Cantidad</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const datos = /*[[${datosPlatillos}]]*/ [];
+    const nombres = datos.map(d => d[0]);
+    const cantidades = datos.map(d => d[1]);
+
+    new Chart(document.getElementById('graficoVentas'), {
+        type: 'bar',
+        data: {
+            labels: nombres,
+            datasets: [{
+                label: 'Pedidos por Platillo',
+                backgroundColor: '#4CAF50',
+                data: cantidades
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+
 </div>
 <!-- Scripts para manejar modales -->
 <script>
