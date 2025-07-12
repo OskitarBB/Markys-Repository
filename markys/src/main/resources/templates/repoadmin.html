@@ -415,7 +415,7 @@
                 <td th:text="${platillo.estado}">DISPONIBLE</td>
                 <td>
 
-                    <img th:src="@{/img/{imagen}(imagen=${platillo.imagen})}" alt="Imagen" style="width: 100px;">
+                    <img th:src="@{'/img/' + ${platillo.imagen}}" alt="Imagen" style="width: 100px;">
 
 
                 </td>

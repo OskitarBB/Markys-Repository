@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: markys-app
+    env: java
+    plan: free
+    buildCommand: mvn clean package
+    startCommand: java -jar target/markys-0.0.1-SNAPSHOT.jar
+    repo: https://github.com/OskitarBB/Markys-Repository.git
+    branch: main
+    envVars:
+      - key: mp.access.token
+        value: "APP_USR-6246925132439479-062001-5f12cdc1c38747034ed29c6ef1a49f1f-2509538210"
+      - key: mp.public.key
+        value: "APP_USR-37e01aa5-6862-429d-b13c-b456f59f7cff"
+      - key: app.base.url
+        value: https://markys-app.onrender.com
