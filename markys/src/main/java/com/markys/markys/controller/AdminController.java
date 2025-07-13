@@ -39,9 +39,9 @@ public class AdminController {
 
     @Autowired
     private PlatilloRepository platilloRepository;
-
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
+
 
     // Vista general del admin
     @GetMapping("/repoadmin")
@@ -228,21 +228,14 @@ public class AdminController {
             platillo.setPrecio(BigDecimal.valueOf(precio));
             platillo.setEstado(estado.equalsIgnoreCase("DISPONIBLE") ? Estado.DISPONIBLE : Estado.AGOTADO);
 
-            // Validar y guardar imagen
             if (!imagenFile.isEmpty()) {
                 try {
                     String carpetaDestino = "src/main/resources/static/img/";
-
-                    // Limpiar el nombre del archivo (quitar espacios o caracteres raros)
-                    String nombreOriginal = imagenFile.getOriginalFilename();
-                    String nombreArchivo = nombreOriginal.replaceAll("\\s+", "_");
-
+                    String nombreArchivo = System.currentTimeMillis() + "_" + imagenFile.getOriginalFilename();
                     Path rutaArchivo = Paths.get(carpetaDestino + nombreArchivo);
                     Files.createDirectories(rutaArchivo.getParent());
                     imagenFile.transferTo(rutaArchivo);
-
-                    // Guardar solo el nombre del archivo en la base de datos
-                    platillo.setImagen(nombreArchivo);
+                    platillo.setImagen("/img/" + nombreArchivo);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return "redirect:/admin/usuarios?seccion=platillos&error=imagen";
@@ -253,8 +246,7 @@ public class AdminController {
             return "redirect:/admin/usuarios?seccion=platillos";
         }
 
-
-    // === EDITAR PLATILLO CON POSIBLE CAMBIO DE IMAGEN ===
+        // === EDITAR PLATILLO CON POSIBLE CAMBIO DE IMAGEN ===
         @PostMapping("/admin/platillos/editar")
         public String editarPlatillo(@RequestParam("id") Long id,
                                      @RequestParam("nombre") String nombre,
@@ -271,7 +263,7 @@ public class AdminController {
                 platillo.setPrecio(BigDecimal.valueOf(precio));
                 platillo.setEstado(estado.equalsIgnoreCase("DISPONIBLE") ? Estado.DISPONIBLE : Estado.AGOTADO);
 
-                if (imagenFile != null && !imagenFile.isEmpty()) {
+                if (!imagenFile.isEmpty()) {
                     try {
                         String carpetaDestino = "src/main/resources/static/img/";
                         String nombreArchivo = imagenFile.getOriginalFilename();
@@ -318,7 +310,6 @@ public class AdminController {
         model.addAttribute("seccion", "ventas");
         return "repoadmin"; // tu mismo archivo HTML
     }
-
 
 }
 
