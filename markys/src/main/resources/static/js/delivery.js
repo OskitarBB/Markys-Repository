@@ -285,6 +285,8 @@ function cerrarModalDireccion() {
 
 //Después de continuar con el pago en Recojo
 function continuarConPago() {
+    console.log("[DEBUG] Entrando a continuarConPago()");
+
     const carritoItems = document.getElementsByClassName('carrito-item');
     const carritoSinImagen = [];
 
@@ -297,22 +299,38 @@ function continuarConPago() {
         carritoSinImagen.push({ nombre, precio, cantidad });
     }
 
-    console.log("[DEBUG] Carrito visual enviado:", carritoSinImagen);
+    const total = carritoSinImagen.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
-    fetch('/api/pago/preferencia', {
+    // Primero registramos el pedido
+    fetch('/api/pago/confirmar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productos: carritoSinImagen })
+        body: JSON.stringify({
+            productos: carritoSinImagen,
+            total: total,
+            metodoEntrega: "recojo",
+            direccionEntrega: ""
+        })
+    })
+    .then(() => {
+        console.log("[DEBUG] Pedido registrado, generando preferencia...");
+
+        // Luego iniciamos la preferencia
+        return fetch('/api/pago/preferencia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productos: carritoSinImagen })
+        });
     })
     .then(response => response.json())
     .then(data => {
-        // Redirección directa al checkout de Mercado Pago
         console.log("Redirigiendo a:", data.init_point);
+        localStorage.removeItem("carrito");
         window.location.href = data.init_point;
     })
     .catch(error => {
-        console.error("Error al iniciar el pago:", error);
-        alert("No hay productos en el carrito, añada algo primero.");
+        console.error("Error durante el proceso de pago:", error);
+        alert("Hubo un problema al registrar el pedido.");
     });
 }
 

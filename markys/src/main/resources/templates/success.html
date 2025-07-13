@@ -85,5 +85,35 @@
     <p>Tu pedido ha sido recibido y está siendo preparado con amor en Marky’s.</p>
     <a th:href="@{/}" class="btn-inicio">Volver al inicio</a>
 </div>
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
+        if (!carrito.length) {
+            console.warn("[Marky’s] No hay carrito para registrar");
+            return;
+        }
+
+        const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+        console.log("[DEBUG] Enviando pedido con datos:", carrito, total);
+        fetch("/api/pago/confirmar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                productos: carrito,
+                total: total,
+                metodoEntrega: "recojo",
+                direccionEntrega: "Cal. Pérez Figuerola 265 - A media cuadra de Plaza de Pisco"
+            })
+        })
+        .then(res => res.text())
+        .then(msg => {
+            console.log("[CONFIRMACIÓN] Pedido registrado:", msg);
+            localStorage.removeItem("carrito"); // limpiamos
+        })
+        .catch(err => {
+            console.error("[ERROR] Al enviar pedido:", err);
+        });
+    });
+</script>
 </body>
 </html>
