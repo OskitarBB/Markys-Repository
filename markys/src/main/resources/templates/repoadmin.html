@@ -158,60 +158,17 @@
     word-wrap: break-word;
     white-space: pre-wrap;  /* Respeta saltos de línea si hay */
 }
-    /* === Sección de Ventas === */
-.ventas-dashboard {
-    padding: 1.5rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-top: 30px;
-    font-family: 'Segoe UI', sans-serif;
+   .ventas-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  color: #2c3e50; /* texto legible */
 }
 
-.ventas-dashboard h1,
-.ventas-dashboard h2 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.ventas-dashboard .subtitle {
-    color: #7f8c8d;
-    margin-bottom: 1.5rem;
-}
-
-.ventas-dashboard .grafico-container {
-    margin-bottom: 30px;
-}
-
-.ventas-dashboard .tabla-ventas {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    font-size: 0.95rem;
-}
-
-.ventas-dashboard .tabla-ventas th,
-.ventas-dashboard .tabla-ventas td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: left;
-}
-
-.ventas-dashboard .tabla-ventas th {
-    background-color: #f8f9fa;
-    color: #34495e;
-    font-weight: 600;
-}
-
-.ventas-dashboard .tabla-ventas tr:hover {
-    background-color: #f1f1f1;
-}
-
-@media (max-width: 768px) {
-    .ventas-dashboard {
-        padding: 1rem;
-    }
-}
     </style>
 
     <script>
@@ -510,66 +467,67 @@
         </form>
     </div>
 </div>
-<div class="ventas-dashboard" th:if="${seccion == 'ventas'}">
-    <h1>Dashboard de Ventas</h1>
-    <h2>Pedidos por Platillo</h2>
-    <p class="subtitle">Visualización gráfica y tabular de los pedidos registrados</p>
+<!-- SECCIÓN DE VENTAS -->
+<div th:if="${seccion == 'ventas'}" class="inventario-container">
+    <div class="ventas-card">
+        <div class="header-container">
+            <h1>Ventas por Dia</h1>
+        </div>
 
-    <!-- Gráfico -->
-    <div class="grafico-container">
-        <canvas id="graficoVentas" height="100"></canvas>
+        <!-- Tabla de Totales por Día -->
+        <div class="table-container">
+            <table class="table product-table">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Total (S/)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="i, stat : ${#numbers.sequence(0, fechas.size() - 1)}">
+                    <td th:text="${fechas[stat.index]}">2025-07-01</td>
+                    <td th:text="'S/ ' + ${#numbers.formatDecimal(totales[stat.index], 1, 2)}">S/ 0.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Gráfico de barras con Chart.js -->
+        <div class="chart-container" style="margin-top: 40px;">
+            <canvas id="ventasChart" height="100"></canvas>
+        </div>
     </div>
-
-    <!-- Tabla -->
-    <table class="tabla-ventas">
-        <thead>
-        <tr>
-            <th>Nombre del Platillo</th>
-            <th>Cantidad de Pedidos</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="dato : ${datosPlatillos}">
-            <td th:text="${dato[0]}">Platillo</td>
-            <td th:text="${dato[1]}">Cantidad</td>
-        </tr>
-        </tbody>
-    </table>
 </div>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    const datos = /*[[${datosPlatillos}]]*/ [];
-    const nombres = datos.map(d => d[0]);
-    const cantidades = datos.map(d => d[1]);
 
-    new Chart(document.getElementById('graficoVentas'), {
-        type: 'bar',
-        data: {
-            labels: nombres,
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        const fechas = /*[[${fechas}]]*/ [];
+        const totales = /*[[${totales}]]*/ [];
+
+        const ctx = document.getElementById('ventasChart');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: fechas,
             datasets: [{
-                label: 'Pedidos por Platillo',
-                backgroundColor: '#4CAF50',
-                data: cantidades
+              label: 'Ventas por día (S/)',
+              data: totales,
+              backgroundColor: '#4CAF50'
             }]
-        },
-        options: {
+          },
+          options: {
             responsive: true,
             plugins: {
-                legend: { display: false },
+              legend: { display: true }
             },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
-                }
+              y: { beginAtZero: true }
             }
-        }
-    });
-    /*]]>*/
-</script>
+          }
+        });
+    </script>
+</div>
 
 </div>
 <!-- Scripts para manejar modales -->
@@ -667,6 +625,6 @@ function cerrarModalEliminarPlatillo() {
 
 </script>
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

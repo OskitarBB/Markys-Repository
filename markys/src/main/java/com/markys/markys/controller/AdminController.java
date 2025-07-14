@@ -4,10 +4,7 @@ import com.markys.markys.model.Estado;
 import com.markys.markys.model.Platillo;
 import com.markys.markys.model.Rol;
 import com.markys.markys.model.Usuario;
-import com.markys.markys.repository.DetallePedidoRepository;
-import com.markys.markys.repository.PlatilloRepository;
-import com.markys.markys.repository.RolRepository;
-import com.markys.markys.repository.UsuarioRepository;
+import com.markys.markys.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +38,8 @@ public class AdminController {
     private PlatilloRepository platilloRepository;
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
-
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     // Vista general del admin
     @GetMapping("/repoadmin")
@@ -304,12 +302,29 @@ public class AdminController {
         return "redirect:/admin/usuarios?seccion=platillos";
     }
     @GetMapping("/admin/ventas")
-    public String mostrarVentas(Model model) {
-        List<Object[]> datosPlatillos = detallePedidoRepository.contarPedidosPorPlatillo();
-        model.addAttribute("datosPlatillos", datosPlatillos);
+    public String verDashboardVentas(Model model) {
+        List<Object[]> datos = pedidoRepository.obtenerTotalesPorDia();
+
+        System.out.println("Datos recibidos del repo:");
+        for (Object[] fila : datos) {
+            System.out.println("Fecha: " + fila[0] + ", Total: " + fila[1]);
+        }
+
+        List<String> fechas = new ArrayList<>();
+        List<BigDecimal> totales = new ArrayList<>();
+
+        for (Object[] fila : datos) {
+            fechas.add(fila[0].toString()); // formato YYYY-MM-DD
+            totales.add((BigDecimal) fila[1]);
+        }
+
+        model.addAttribute("fechas", fechas);
+        model.addAttribute("totales", totales);
         model.addAttribute("seccion", "ventas");
-        return "repoadmin"; // tu mismo archivo HTML
+
+        return "repoadmin";
     }
+
 
 }
 
