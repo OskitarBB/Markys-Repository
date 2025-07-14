@@ -471,7 +471,7 @@
 <div th:if="${seccion == 'ventas'}" class="inventario-container">
     <div class="ventas-card">
         <div class="header-container">
-            <h1>Ventas por Dia</h1>
+            <h1>Ventas por Día</h1>
         </div>
 
         <!-- Tabla de Totales por Día -->
@@ -497,37 +497,98 @@
             <canvas id="ventasChart" height="100"></canvas>
         </div>
     </div>
+
+    <hr style="margin: 40px 0; border: 1px solid #ccc;" />
+
+    <div class="ventas-card">
+        <div class="header-container">
+            <h1>Platillos Más Vendidos</h1>
+        </div>
+
+        <!-- Tabla de Platillos Más Vendidos -->
+        <div class="table-container">
+            <table class="table product-table">
+                <thead>
+                <tr>
+                    <th>Platillo</th>
+                    <th>Cantidad Vendida</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="i, stat : ${#numbers.sequence(0, nombresPlatillos.size() - 1)}">
+                    <td th:text="${nombresPlatillos[stat.index]}">Nombre Platillo</td>
+                    <td th:text="${cantidadesVendidas[stat.index]}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Gráfico de barras de Platillos Más Vendidos -->
+        <div class="chart-container" style="margin-top: 40px;">
+            <canvas id="platillosChart" height="100"></canvas>
+        </div>
+    </div>
 </div>
 
+<!-- Cargar librería Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:inline="javascript">
-        const fechas = /*[[${fechas}]]*/ [];
-        const totales = /*[[${totales}]]*/ [];
+<!-- Script de gráfico de ventas por día -->
+<script th:inline="javascript">
+    const fechas = /*[[${fechas}]]*/ [];
+    const totales = /*[[${totales}]]*/ [];
 
-        const ctx = document.getElementById('ventasChart');
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
+    const ctx = document.getElementById('ventasChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
             labels: fechas,
             datasets: [{
-              label: 'Ventas por día (S/)',
-              data: totales,
-              backgroundColor: '#4CAF50'
+                label: 'Ventas por día (S/)',
+                data: totales,
+                backgroundColor: '#4CAF50'
             }]
-          },
-          options: {
+        },
+        options: {
             responsive: true,
             plugins: {
-              legend: { display: true }
+                legend: { display: true }
             },
             scales: {
-              y: { beginAtZero: true }
+                y: { beginAtZero: true }
             }
-          }
-        });
-    </script>
-</div>
+        }
+    });
+</script>
+
+<!-- Script de gráfico de platillos más vendidos -->
+<script th:inline="javascript">
+    const nombresPlatillos = /*[[${nombresPlatillos}]]*/ [];
+    const cantidadesVendidas = /*[[${cantidadesVendidas}]]*/ [];
+
+    const ctxPlatillos = document.getElementById('platillosChart');
+    new Chart(ctxPlatillos, {
+        type: 'bar',
+        data: {
+            labels: nombresPlatillos,
+            datasets: [{
+                label: 'Cantidad Vendida',
+                data: cantidadesVendidas,
+                backgroundColor: '#f39c12'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
 
 </div>
 <!-- Scripts para manejar modales -->

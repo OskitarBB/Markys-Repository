@@ -1,9 +1,6 @@
 package com.markys.markys.controller;
 
-import com.markys.markys.model.Estado;
-import com.markys.markys.model.Platillo;
-import com.markys.markys.model.Rol;
-import com.markys.markys.model.Usuario;
+import com.markys.markys.model.*;
 import com.markys.markys.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.markys.markys.model.EstadoUsuario;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,6 +36,7 @@ public class AdminController {
     private DetallePedidoRepository detallePedidoRepository;
     @Autowired
     private PedidoRepository pedidoRepository;
+
 
     // Vista general del admin
     @GetMapping("/repoadmin")
@@ -302,24 +299,31 @@ public class AdminController {
         return "redirect:/admin/usuarios?seccion=platillos";
     }
     @GetMapping("/admin/ventas")
-    public String verDashboardVentas(Model model) {
-        List<Object[]> datos = pedidoRepository.obtenerTotalesPorDia();
-
-        System.out.println("Datos recibidos del repo:");
-        for (Object[] fila : datos) {
-            System.out.println("Fecha: " + fila[0] + ", Total: " + fila[1]);
-        }
-
+    public String mostrarDashboardVentas(Model model) {
+        // Datos por día
+        List<Object[]> resultados = pedidoRepository.obtenerTotalesPorDia();
         List<String> fechas = new ArrayList<>();
         List<BigDecimal> totales = new ArrayList<>();
 
-        for (Object[] fila : datos) {
-            fechas.add(fila[0].toString()); // formato YYYY-MM-DD
+        for (Object[] fila : resultados) {
+            fechas.add(fila[0].toString());
             totales.add((BigDecimal) fila[1]);
+        }
+
+        // Datos de platillos más vendidos
+        List<Object[]> topPlatillos = detallePedidoRepository.obtenerPlatillosMasVendidos();
+        List<String> nombresPlatillos = new ArrayList<>();
+        List<Long> cantidadesVendidas = new ArrayList<>();
+
+        for (Object[] fila : topPlatillos) {
+            nombresPlatillos.add((String) fila[0]);
+            cantidadesVendidas.add(((Number) fila[1]).longValue());
         }
 
         model.addAttribute("fechas", fechas);
         model.addAttribute("totales", totales);
+        model.addAttribute("nombresPlatillos", nombresPlatillos);
+        model.addAttribute("cantidadesVendidas", cantidadesVendidas);
         model.addAttribute("seccion", "ventas");
 
         return "repoadmin";
